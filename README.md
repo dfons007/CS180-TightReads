@@ -1,4 +1,5 @@
-# Fall 2019 CS180 - Introduction to Software Engineering
+# TightReads
+## Fall 2019 CS180 - Introduction to Software Engineering
 
 **Collaborators:** Daniel Fonseca, Son Phan, Jonathan Ho, Jonathan Oaks, Rocio Roman
 
