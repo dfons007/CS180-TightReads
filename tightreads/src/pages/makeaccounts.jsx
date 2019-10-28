@@ -21,7 +21,11 @@ class MakeAccountsPage extends Component {
   }
 
   handleSubmit(event) {     //Event submit handler will display alert screen displaying our state variables
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(function(firebaseUser){
+            // success
+        })
+        .catch(function(error){
         var errorCode = error.code;
         var errorMessage = error.message;
         if(errorCode === 'auth/weak-password'){
@@ -35,6 +39,15 @@ class MakeAccountsPage extends Component {
           console.log(errorMessage);
         }
     });
+
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        console.log("signed out")
+    }).catch(function(error) {
+        // An error happened.
+        console.log(error.message);
+    });
+    event.preventDefault();
   }
   
   render() {
