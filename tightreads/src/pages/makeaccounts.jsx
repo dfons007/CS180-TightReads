@@ -21,12 +21,20 @@ class MakeAccountsPage extends Component {
   }
 
   handleSubmit(event) {     //Event submit handler will display alert screen displaying our state variables
-    alert("Please import this into database: " + this.state.firstName + " " + this.state.lastName);
-    var user = this.state.email;
-    user = user.replace(".",",");
-    console.log(this.state.email);
-    firebase.database().ref('/users/' + user).set(this.state);
-    event.preventDefault();
+    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if(errorCode === 'auth/weak-password'){
+          alert('Weak Password.');
+        }else if(errorCode === 'auth/invalid email'){
+          alert('Invalid Email');
+        }else if(errorCode === 'auth/email-already-in-use'){
+          alert('This email is already in use. Please try a different email.');
+        }else {
+          console.log(error);
+          console.log(errorMessage);
+        }
+    });
   }
   
   render() {
