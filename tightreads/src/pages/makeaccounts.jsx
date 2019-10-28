@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import firebase from "../firebase"
+import {Link} from "react-router-dom";
 
 class MakeAccountsPage extends Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = {    //State to hold all of our inputs as variables
       firstName: '',
       lastName: '',
@@ -19,8 +21,12 @@ class MakeAccountsPage extends Component {
   }
 
   handleSubmit(event) {     //Event submit handler will display alert screen displaying our state variables
-    alert("Please import this into database: " + this.state.firstName + " " + this.state.lastName)
-    event.preventDefault()
+    alert("Please import this into database: " + this.state.firstName + " " + this.state.lastName);
+    var user = this.state.email;
+    user = user.replace(".",",");
+    console.log(this.state.email);
+    firebase.database().ref('/users/' + user).set(this.state);
+    event.preventDefault();
   }
   
   render() {
@@ -44,7 +50,7 @@ class MakeAccountsPage extends Component {
               </form>
           </section>
           <section className='display-item'>
-            <div className='wrapper'>
+            <div class Name='wrapper'>
               <ul>
                 <li>First name: {this.state.firstName}</li>
                 <li>Last name: {this.state.lastName}</li>
@@ -52,6 +58,9 @@ class MakeAccountsPage extends Component {
                 <li>Password: {this.state.password}</li>
                 <li>Re-entered Password: {this.state.repassword}</li>
               </ul>
+            </div>
+            <div>
+              <Link to="/">Home</Link>
             </div>
           </section>
         </div>
