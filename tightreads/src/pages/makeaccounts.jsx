@@ -21,33 +21,48 @@ class MakeAccountsPage extends Component {
   }
 
   handleSubmit(event) {     //Event submit handler will display alert screen displaying our state variables
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(function(firebaseUser){
-            // success
-        })
-        .catch(function(error){
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if(errorCode === 'auth/weak-password'){
-          alert('Weak Password.');
-        }else if(errorCode === 'auth/invalid email'){
-          alert('Invalid Email');
-        }else if(errorCode === 'auth/email-already-in-use'){
-          alert('This email is already in use. Please try a different email.');
-        }else {
-          console.log(error);
-          console.log(errorMessage);
-        }
-    });
-
-    firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-        console.log("signed out")
-    }).catch(function(error) {
-        // An error happened.
-        console.log(error.message);
-    });
-    event.preventDefault();
+      if(this.state.repassword === this.state.password && this.state.email !== "" && this.state.firstName !== "" && this.state.lastName !== "") {
+          firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+              .then((firebaseUser) => {
+                  // Success
+                  // Check if user exists
+                  if (firebaseUser) {
+                      // Update Firebase User Profile
+                      firebaseUser.user.updateProfile({
+                          displayName: this.state.firstName + " " + this.state.lastName,
+                      }).then(function () {
+                          console.log("Update Profile successful")
+                      }).catch(function (error) {
+                          console.log(error);
+                      });
+                      // Add user to database + there other stuff
+                      firebase.database().ref('users/' + firebaseUser.user.uid).set({
+                          displayname: this.state.firstName + " " + this.state.lastName,
+                          bio: "Hi, what's your name?",
+                          email: this.state.email
+                      });
+                  }
+              })
+              .catch(function (error) {
+                  // Error Catching for User Creation
+                  var errorCode = error.code;
+                  var errorMessage = error.message;
+                  if (errorCode === 'auth/weak-password') {
+                      alert('Weak Password.');
+                  } else if (errorCode === 'auth/invalid email') {
+                      alert('Invalid Email');
+                  } else if (errorCode === 'auth/email-already-in-use') {
+                      alert('This email is already in use. Please try a different email.');
+                  } else {
+                      console.log(error);
+                      console.log(errorMessage);
+                  }
+              });
+          event.preventDefault();
+      }else{
+          alert('Passwords do not match or a field is empty.');
+          event.preventDefault();
+      }
   }
   
   render() {
@@ -65,8 +80,8 @@ class MakeAccountsPage extends Component {
                 <input type="text" name="firstName" placeholder="First Name" onChange={this.handleChange} /> 
                 <input type="text" name="lastName" placeholder="Last Name" onChange={this.handleChange}/>
                 <input type="text" name="email" placeholder="E-mail" onChange={this.handleChange}/>
-                <input type="text" name="password" placeholder="Password" onChange={this.handleChange}/>
-                <input type="text" name="repassword" placeholder="Re-enter Password" onChange={this.handleChange}/>
+                <input type="password" name="password" placeholder="Password" onChange={this.handleChange}/>
+                <input type="password" name="repassword" placeholder="Re-enter Password" onChange={this.handleChange}/>
                 <button>Make Account</button>
               </form>
           </section>
