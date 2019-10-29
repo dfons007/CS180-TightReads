@@ -27,6 +27,7 @@ class LoginPage extends Component {
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(function(user){
                 console.log(user);
+                alert("Login Success!");
             })
             .catch(function(error){
                 console.log('here error');
@@ -53,6 +54,7 @@ class LoginPage extends Component {
         return (
             <MDBContainer>
                 <MDBRow>
+                    <MDBCol md="3"></MDBCol>
                     <MDBCol md="6">
                         <form onSubmit={this.handleSubmit}>
                             <p className="h4 text-center mb-4">Sign in</p>
@@ -84,6 +86,7 @@ class LoginPage extends Component {
                             </div>
                         </form>
                     </MDBCol>
+                    <MDBCol></MDBCol>
                 </MDBRow>
             </MDBContainer>
         );
