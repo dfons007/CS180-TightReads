@@ -63,6 +63,7 @@ class MakeAccountsPage extends Component {
           alert('Passwords do not match or a field is empty.');
           event.preventDefault();
       }
+      this.props.history.push('/profile');
   }
   
   render() {

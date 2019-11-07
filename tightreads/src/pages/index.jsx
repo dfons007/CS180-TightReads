@@ -48,6 +48,7 @@ class LoginPage extends Component {
         });
         event.preventDefault();
         console.log('here end');
+        Link.props.to('/profile');
     }
 
     render(){
@@ -81,7 +82,7 @@ class LoginPage extends Component {
                             />
                             <div className="text-center mt-4">
                                 <MDBBtn color="indigo" type="submit">Login</MDBBtn>
-                                <MDBBtn color="indigo" type="sumbit"><Link to="/makeaccounts">Create An Account</Link></MDBBtn>
+                                <MDBBtn color="indigo" onClick={()=> this.props.history.push('/makeaccounts')}>Create an Account</MDBBtn>
                                 {/* <Link to="/makeaccounts">Create An Account</Link> */}
                             </div>
                         </form>

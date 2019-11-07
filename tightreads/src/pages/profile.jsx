@@ -5,21 +5,46 @@ import { MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBAva
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
+import firebase from "../firebase";
 
 class ProfilePage extends Component {
-
   constructor () {
     super();
     this.state = {    //State to hold all of our inputs as variables
-      firstName: 'Sunny',
-      lastName: 'Phan',
-      email: 'sphan010@ucr.edu',
-      bio: 'Single and ready to mingle',
-      genres: 'Romance, Self-Help'
+      display: '',
+      email: '',
+      bio: '',
+      genres: 'Romance, Self-Help',
+      uid: '',
     };
+    this.authflag = true;
   }
-  
+
 render() {
+    // authentication, if not authenticated return to home
+
+    firebase.auth().onAuthStateChanged((user)=>{
+      if(user){
+        console.log(user.uid);
+        if(this.authflag){
+          var that = this;
+          firebase.database().ref('users/'+user.uid).once('value')
+              .then(function(snapshot){
+                that.setState({
+                  display: snapshot.val().displayname,
+                  email: snapshot.val().email,
+                  bio: snapshot.val().bio,
+                });
+              });
+          this.setState({uid: user.uid});
+          console.log('user', this.state.uid);
+          this.authflag = false;
+        }
+      }else{
+        console.log('no user');
+      }
+    });
+    // Can we make this cleaner?
     return (
       <>
   <Navbar bg="primary" variant="dark">
@@ -62,7 +87,7 @@ render() {
                 </MDBView>
 
                 <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
-                  <a href="#!">{this.state.firstName} {this.state.lastName}</a>
+                  <a href="#!">{this.state.display}</a>
                 </h3>
                 <p className="dark-grey-text mb-lg-0 mb-md-5 mb-4">
                   {this.state.bio}
