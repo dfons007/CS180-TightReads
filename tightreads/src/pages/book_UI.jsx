@@ -21,50 +21,36 @@ class Book_UI extends Component {
 	}
 
 	render() {
-        return (
-            <MDBCard className="my-5 px-5 pb-5">
-              <MDBCardBody>
-                <MDBRow>
-                  <MDBCol lg="5">
-                    <MDBView >
-                      <img src={this.state.artwork} />
-                    </MDBView>
-                  </MDBCol>
-                  <MDBCol lg="7">
-                    <a href="#!" className="green-text">
-                      <h6 className="font-weight-bold mb-3">
-                        <MDBIcon icon="book" className="pr-2" />
-                        Books
-                      </h6>
-                    </a>
-                    <h1>
-                      <strong>{this.state.title} </strong>
-                      <br/>{this.state.subtitle}
-                    </h1>
-                    <h5>
-                        <b>Author: </b> 
-                        <a href="ENTER HYPERLINK HERE TO AUTHOR">
-                            {this.state.author} 
-                        </a>
-                    </h5>
+		return (
+			<div class="container">
 
-                    <h5>
-                        <b>Genre: </b> {this.state.genre} 
-                    </h5>
-                    <h5>
-                        <b>Summary:</b> 
-                    </h5>
-                    <p>
-                        {this.state.summary} 
-                    </p>
-                    <MDBBtn color="success" size="md">
-                        button
-                    </MDBBtn>
-                  </MDBCol>
-                </MDBRow>
-              </MDBCardBody>
-            </MDBCard>
-        );
+				<div class="row">
+					<div class="col-sm-4">
+						<img src={this.state.artwork} alt='book image' width={350} height={500} mode='fit'/>
+					</div>
+
+					<div class="col-sm-8">
+						<h1>
+							<strong>{this.state.title} </strong>
+							<br/>{this.state.subtitle}
+						</h1>
+						<h5>
+							<b>Author: </b> {this.state.author} 
+						</h5>
+						<h5>
+							<b>Genre: </b> {this.state.genre} 
+						</h5>
+						<h5>
+							<b>Summary:</b> 
+						</h5>
+						<p>
+							{this.state.summary} 
+						</p>
+						
+					</div>
+				</div>
+			</div>
+		);
 	}
     
     componentDidMount() {
