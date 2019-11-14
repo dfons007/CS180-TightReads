@@ -1,6 +1,10 @@
+  
 import React, { Component } from 'react';
-import firebase from "../firebase"
 import {Link} from "react-router-dom";
+import {Nav,Navbar,Form,FormControl,Figure,Button,Media,Container,Col,Row, Image} from 'react-bootstrap';
+import {  MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
+import firebase from "../firebase"
+
 
 class MakeAccountsPage extends Component {
   constructor (props) {
@@ -68,6 +72,47 @@ class MakeAccountsPage extends Component {
   
   render() {
     return (
+      <form class="text-center border border-light p-5" action="#!" onSubmit={this.handleSubmit}>
+        <p class="h4 mb-4">Sign up</p>
+
+        <div class="form-row mb-4">
+          {/* Enter First Name */}
+          <div class="col">
+            <input type="text" id="firstName" class="form-control" placeholder="First name" onChange={this.handleChange}/>
+          </div>
+
+          {/* Enter Last Name */}
+          <div class="col">
+            <input type="text" id="lastName" class="form-control" placeholder="Last name" onChange={this.handleChange}/>
+          </div>
+        </div>
+
+        {/* Enter Email */}
+        <input type="email" id="email" class="form-control mb-4" placeholder="E-mail" onChange={this.handleChange}/>
+
+        <div class="form-row mb-4">
+          {/* Enter Password */}
+          <div class="col">
+            <input type="password" id="password" class="form-control" placeholder="Password" onChange={this.handleChange}/>
+          </div>
+
+          {/* Confirm Password */}
+          <div class="col">
+            <input type="password" id="repassword" class="form-control" placeholder="Confirm" onChange={this.handleChange}/>
+          </div>
+        </div>
+
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="defaultRegisterFormNewsletter"/>
+          <label class="custom-control-label" for="defaultRegisterFormNewsletter">Subscribe to our newsletter</label>
+        </div>
+
+        <button class="btn btn-info my-4 btn-block" type="submit">Sign in</button>
+
+        <p>By clicking <em>Sign up</em> you agree to our terms of service</p>
+      </form>
+
+      /**
       <div className='app'>
         <header>
             <div className='wrapper'>
@@ -102,6 +147,7 @@ class MakeAccountsPage extends Component {
           </section>
         </div>
       </div>
+      **/
     );
   }
 }
