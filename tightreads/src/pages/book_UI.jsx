@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {  MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
 
-import { getGoogleBook } from '../google.js';
+import { getGoogleBook, getGoogleSearch } from '../google.js';
 
 class Book_UI extends Component {
 	constructor () {
@@ -54,7 +54,13 @@ class Book_UI extends Component {
 	}
     
     componentDidMount() {
-        const id = "HestSXO362YC";//this.props.match.params;
+	    var id;
+	    if(this.props.location.state.id != null){
+	        id = this.props.location.state.id;
+        }else {
+            id = "HestSXO362YC";//this.props.match.params;
+        }
+
         this.setState({
             id: id,
         });
