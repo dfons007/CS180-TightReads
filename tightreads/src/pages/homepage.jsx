@@ -5,6 +5,7 @@ import {Navbar, Nav,Row, Col, Form, FormControl, Button, Carousel, Container, Ca
 import firebase from "../firebase";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getGoogleBook, getGoogleSearch } from '../google.js';
+import { LinkContainer } from 'react-router-bootstrap'
 
 class HomePage extends Component {
   constructor(props){
@@ -79,11 +80,21 @@ render() {
     <>
 
       <Navbar bg="dark" variant="dark">
+        <LinkContainer to="/homepage">
         <Navbar.Brand href="#home">TightReads</Navbar.Brand>
+        </LinkContainer>
         <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#Login">Login</Nav.Link>
-          <Nav.Link href="#Profile">Sign Up</Nav.Link>
+              <LinkContainer to="/homepage">
+              <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+
+              <LinkContainer to="/">
+              <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
+
+              <LinkContainer to="/makeaccounts">
+              <Nav.Link>Sign Up</Nav.Link>
+              </LinkContainer>
         </Nav>
         <Form inline>
           <FormControl type="text" placeholder="Search Books" className="mr-sm-2" />
