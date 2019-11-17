@@ -19,7 +19,7 @@ class MakeAccountsPage extends Component {
     this.handleChange = this.handleChange.bind(this);   //Bind events to this state
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
+   
   handleChange (event) {    //Event change handler will set our state variables
     this.setState({ [event.target.name]: event.target.value });
   }
