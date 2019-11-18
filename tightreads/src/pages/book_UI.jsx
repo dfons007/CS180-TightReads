@@ -17,6 +17,7 @@ class Book_UI extends Component {
 			genre: 'BOOK GENRE',
 			summary: 'This is the book sumary... blah blah blah...',
             artwork: "https://via.placeholder.com/500",
+            link: '',
 
 		};
 	}
@@ -77,7 +78,11 @@ class Book_UI extends Component {
 							<p>
 								{this.state.summary} 
 							</p>
-							
+							<Button variant="secondary" size="sm" onClick={()=>
+                                window.open(this.state.link)
+                                }>
+                                See this book on Google Books
+                            </Button>
 						</div>
 					</div>
 				</div>
@@ -105,6 +110,7 @@ class Book_UI extends Component {
                 genre: (data.volumeInfo.categories) ? data.volumeInfo.categories[0]  : '',
                 summary: (data.volumeInfo.description) ? data.volumeInfo.description : '',
                 artwork: (data.volumeInfo.imageLinks) ? data.volumeInfo.imageLinks.thumbnail : '',
+                link: (data.volumeInfo.previewLink) ? data.volumeInfo.previewLink : '',
             });
         });
     }
