@@ -6,11 +6,11 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { getGoogleBook, getGoogleSearch } from '../google.js';
 
 class Book_UI extends Component {
-	constructor () {
-		super();
+	constructor(props){
+		super(props);
 		this.state = {   
             id: "",
-            
+            query: "",
 			title: 'BOOK TITLE',
             subtitle: '',
 			author: 'BOOK AUTHOR',
@@ -19,6 +19,18 @@ class Book_UI extends Component {
             artwork: "https://via.placeholder.com/500",
 
 		};
+		this.handleChange = this.handleChange.bind(this);
+		this.Search = this.Search.bind(this);
+	}
+
+	handleChange(event) {    //Event change handler will set our state variables
+		this.setState({[event.target.name]: event.target.value});
+	}
+
+	Search(event){
+		event.preventDefault();
+		console.log(this.state.query);
+		this.props.history.push({pathname:'/books',state:{query:this.state.query}});
 	}
 
 	render() {
@@ -42,9 +54,9 @@ class Book_UI extends Component {
 					<Nav.Link>Sign Up</Nav.Link>
 					</LinkContainer>            
 				</Nav>
-				<Form inline>
-					<FormControl type="text" placeholder="Search Books" className="mr-sm-2" />
-					<Button variant="outline-light">Search</Button>
+				<Form onSubmit={this.Search} inline>
+					<FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
+					<Button type="submit" variant="outline-light">Search</Button>
 				</Form>
 				</Navbar>
 

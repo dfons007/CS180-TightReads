@@ -1,39 +1,52 @@
 import React, {Component} from 'react';
 import Books from './Books';
 import BookCard from './BookCard';
+import {CardDeck, Card, Button} from 'react-bootstrap';
+import {withRouter} from 'react-router-dom';
 
 //renders google books API data on UI
-const BookList = (props)=>
+const BookList = props =>
 {
     return (
 
-        <div className="list">
+        <CardDeck>
             {/* renders out individual book cards */}
             {
                 props.books.map((book, i) => {
-                    return <BookCard 
-                                key={i}
-                                image={book.volumeInfo.imageLinks === undefined
-                                    ? ""
-                                    : `${book.volumeInfo.imageLinks.thumbnail}`}
-                                title={book.volumeInfo.title}
-                                author={book.volumeInfo.authors}
-                                price={book.saleInfo.saleability}
-                                published={book.volumeInfo.publishedDate}
-                                summary={book.volumeInfo.description}
-                    />
+                    return(<Card>
+                        <Card.Img variant="top" src={book.volumeInfo.imageLinks.thumbnail} />
+                        <Card.Body>
+                            <Card.Title>{book.volumeInfo.title}</Card.Title>
+                            <Card.Text>
+                                {book.volumeInfo.authors}
+
+                                {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
+
+                            </Card.Text>
+                        </Card.Body>
+                        <Card.Footer>
+                            {/* <small className="text-muted">Genre</small> */}
+                            <Button variant="secondary" size="sm" onClick={()=>
+                                props.history.push({pathname:'/bookprofile', state:{id:book.id}})
+                            }>
+                                More Info
+                            </Button>
+
+                        </Card.Footer>
+                    </Card>)
+
+
 
                 })
 
             }
 
-        </div>        
+        </CardDeck>
    
         
     )
 
     
 
-}
-
-export default BookList;
+};
+export default withRouter(BookList);

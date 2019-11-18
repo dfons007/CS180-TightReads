@@ -19,16 +19,22 @@ class ProfilePage extends Component {
       uid: '',
       editmode: false,
       authflag: true,
+      query:'',
     };
 
     this.onClick = this.onClick.bind(this);
     this.handleChangeDisplay = this.handleChangeDisplay.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.Search = this.Search.bind(this);
   }
   handleChangeDisplay(event){
     this.setState({ display: event.currentTarget.textContent });
     console.log(this.state.display);
     console.log(this.state.bio);
+  }
+  handleChange(event) {    //Event change handler will set our state variables
+    this.setState({[event.target.name]: event.target.value});
   }
   handleChangeBio(event){
     this.setState({ bio: event.currentTarget.textContent });
@@ -52,8 +58,14 @@ class ProfilePage extends Component {
       // save changes and submit to the database
     }
   }
+  Search(event){
+    event.preventDefault();
+    console.log(this.state.query);
+    this.props.history.push({pathname:'/books',state:{query:this.state.query}});
+  }
 
-render() {
+
+  render() {
     // authentication, if not authenticated return to home
 
     firebase.auth().onAuthStateChanged((user)=>{
@@ -88,9 +100,9 @@ render() {
       <Nav.Link href="#features">Profile</Nav.Link>
       <Nav.Link href="#pricing">Logout</Nav.Link>
     </Nav>
-    <Form inline>
-      <Button variant="outline-light">Search</Button>
-      <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
+    <Form onSubmit={this.Search} inline>
+      <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
+      <Button type="submit" variant="outline-light">Search</Button>
     </Form>
   </Navbar>
 
