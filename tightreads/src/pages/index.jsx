@@ -1,10 +1,15 @@
 import React, {Component} from "react";
 import firebase from "../firebase";
+import {Redirect} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import { Link } from "react-router-dom";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn } from 'mdbreact';
+import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap'
+
 
 class LoginPage extends Component {
     constructor(props){
@@ -53,6 +58,32 @@ class LoginPage extends Component {
 
     render(){
         return (
+
+        <>
+            <Navbar bg="dark" variant="dark">
+                <LinkContainer to="/homepage">
+                <Navbar.Brand href="#home">TightReads</Navbar.Brand>
+                </LinkContainer>
+                <Nav className="mr-auto">
+                    <LinkContainer to="/homepage">
+                    <Nav.Link>Home</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/">
+                    <Nav.Link>Login</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/makeaccounts">
+                    <Nav.Link>Sign Up</Nav.Link>
+                    </LinkContainer>
+                </Nav>
+                <Form inline>
+                <FormControl type="text" placeholder="Search Books" className="mr-sm-2" />
+                <Button variant="outline-light">Search</Button>
+                </Form>
+            </Navbar>
+
+            <br/>
+            <br/>
+
             <MDBContainer>
                 <MDBRow>
                     <MDBCol md="3"></MDBCol>
@@ -90,6 +121,7 @@ class LoginPage extends Component {
                     <MDBCol></MDBCol>
                 </MDBRow>
             </MDBContainer>
+        </>
         );
     }
 

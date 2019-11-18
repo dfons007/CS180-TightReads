@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import firebase from "../firebase"
-import {Link} from "react-router-dom";
+import {Link,NavLink} from "react-router-dom";
+import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap'
+
+
 
 class MakeAccountsPage extends Component {
   constructor (props) {
@@ -15,7 +19,7 @@ class MakeAccountsPage extends Component {
     this.handleChange = this.handleChange.bind(this);   //Bind events to this state
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
+   
   handleChange (event) {    //Event change handler will set our state variables
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -69,12 +73,30 @@ class MakeAccountsPage extends Component {
   render() {
     return (
       <div className='app'>
-        <header>
-            <div className='wrapper'>
-              <h1>TightReads</h1>
-              
-            </div>
-        </header>
+        <Navbar bg="dark" variant="dark">
+          <LinkContainer to="/homepage">
+          <Navbar.Brand href="#home">TightReads</Navbar.Brand>
+          </LinkContainer>
+          <Nav className="mr-auto">
+              <LinkContainer to="/homepage">
+              <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/">
+              <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/makeaccounts">
+              <Nav.Link>Sign Up</Nav.Link>
+              </LinkContainer>            
+          </Nav>
+          <Form inline>
+            <FormControl type="text" placeholder="Search Books" className="mr-sm-2" />
+            <Button variant="outline-light">Search</Button>
+          </Form>
+        </Navbar>
+
+        <br/>
+        <br/>
+
         <div className='container'>
           <section className='add-item'>
               <form onSubmit={this.handleSubmit}>
@@ -83,9 +105,15 @@ class MakeAccountsPage extends Component {
                 <input type="text" name="email" placeholder="E-mail" onChange={this.handleChange}/>
                 <input type="password" name="password" placeholder="Password" onChange={this.handleChange}/>
                 <input type="password" name="repassword" placeholder="Re-enter Password" onChange={this.handleChange}/>
+                <br/>
+                <br/>
                 <button>Make Account</button>
               </form>
           </section>
+
+          <br/>
+          <br/>
+
           <section className='display-item'>
             <div class Name='wrapper'>
               <ul>
@@ -97,7 +125,10 @@ class MakeAccountsPage extends Component {
               </ul>
             </div>
             <div>
-              <Link to="/">Home</Link>
+              <LinkContainer to="/">
+                <Button>Home</Button>
+              </LinkContainer>
+
             </div>
           </section>
         </div>
