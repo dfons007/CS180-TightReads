@@ -53,7 +53,7 @@ class LoginPage extends Component {
         });
         event.preventDefault();
         console.log('here end');
-        Link.props.to('/profile');
+        this.props.history.push('/profile');
     }
 
     render(){

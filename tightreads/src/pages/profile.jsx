@@ -6,6 +6,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import firebase from "../firebase";
+import ContentEditable from "react-contenteditable";
 
 class ProfilePage extends Component {
   constructor () {
@@ -16,8 +17,40 @@ class ProfilePage extends Component {
       bio: '',
       genres: 'Romance, Self-Help',
       uid: '',
+      editmode: false,
+      authflag: true,
     };
-    this.authflag = true;
+
+    this.onClick = this.onClick.bind(this);
+    this.handleChangeDisplay = this.handleChangeDisplay.bind(this);
+    this.handleChangeBio = this.handleChangeBio.bind(this);
+  }
+  handleChangeDisplay(event){
+    this.setState({ display: event.currentTarget.textContent });
+    console.log(this.state.display);
+    console.log(this.state.bio);
+  }
+  handleChangeBio(event){
+    this.setState({ bio: event.currentTarget.textContent });
+    console.log(this.state.display);
+    console.log(this.state.bio);
+  }
+
+  onClick(event){
+    if(this.state.editmode === false){
+      this.setState({editmode:true});
+      console.log("Working button");
+      // do editting
+    }else{
+      this.setState({editmode:false});
+      console.log(this.state.display);
+      console.log(this.state.bio);
+      firebase.database().ref('users/'+this.state.uid).update({
+        displayname:this.state.display,
+        bio:this.state.bio,
+      });
+      // save changes and submit to the database
+    }
   }
 
 render() {
@@ -26,7 +59,7 @@ render() {
     firebase.auth().onAuthStateChanged((user)=>{
       if(user){
         console.log(user.uid);
-        if(this.authflag){
+        if(this.state.authflag){
           var that = this;
           firebase.database().ref('users/'+user.uid).once('value')
               .then(function(snapshot){
@@ -38,12 +71,13 @@ render() {
               });
           this.setState({uid: user.uid});
           console.log('user', this.state.uid);
-          this.authflag = false;
+          this.setState({authflag:false});
         }
       }else{
         console.log('no user');
       }
     });
+
     // Can we make this cleaner?
     return (
       <>
@@ -55,8 +89,8 @@ render() {
       <Nav.Link href="#pricing">Logout</Nav.Link>
     </Nav>
     <Form inline>
-      <FormControl type="text" placeholder="Search" className="mr-sm-2" />
       <Button variant="outline-light">Search</Button>
+      <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
     </Form>
   </Navbar>
 
@@ -85,11 +119,12 @@ render() {
                     <MDBMask overlay="white-slight" className="waves-light" />
                   </a>
                 </MDBView>
-
                 <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
-                  <a href="#!">{this.state.display}</a>
+                  <a id="display" contentEditable={this.state.editmode} href="#!" onInput={this.handleChangeDisplay}>
+                    {this.state.display}
+                  </a>
                 </h3>
-                <p className="dark-grey-text mb-lg-0 mb-md-5 mb-4">
+                <p id="bio" type="input" contentEditable={this.state.editmode} className="dark-grey-text mb-lg-0 mb-md-5 mb-4" onInput={this.handleChangeBio}>
                   {this.state.bio}
                 </p>
                 <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
