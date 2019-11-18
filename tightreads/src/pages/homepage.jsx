@@ -78,7 +78,7 @@ class HomePage extends Component {
 render() {
   return (
     <>
-
+{/* search bar */}
       <Navbar bg="dark" variant="dark">
         <LinkContainer to="/homepage">
         <Navbar.Brand href="#home">TightReads</Navbar.Brand>
