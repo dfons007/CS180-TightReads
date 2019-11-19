@@ -1,11 +1,8 @@
 import React, {Component} from "react";
 import firebase from "../firebase";
-import {Redirect} from 'react-router-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
-import { Link } from "react-router-dom";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn } from 'mdbreact';
 import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
@@ -18,6 +15,8 @@ class LoginPage extends Component {
             email: '',
             password:'',
             query:'',
+            authflag:true,
+            uid:'',
         };
         this.handleSubmit = this.handleSubmit.bind(this); // bind event
         this.handleChange = this.handleChange.bind(this);
@@ -62,6 +61,20 @@ class LoginPage extends Component {
         console.log('here end');
         this.props.history.push('/profile');
     }
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged((user)=>{
+            if(user){
+                if(this.state.authflag){
+                    this.setState({uid:user.uid});
+                    console.log('user', this.state.uid);
+                    this.setState({authflag:false});
+                    this.props.history.push('/homepage');
+                }
+            }else{
+                console.log('no user'); // Redirect to login
+            }
+        });
+    }
 
     render(){
         return (
@@ -69,17 +82,20 @@ class LoginPage extends Component {
         <>
             <Navbar bg="dark" variant="dark">
                 <LinkContainer to="/homepage">
-                <Navbar.Brand href="#home">TightReads</Navbar.Brand>
+                    <Navbar.Brand href="#home">TightReads</Navbar.Brand>
                 </LinkContainer>
                 <Nav className="mr-auto">
                     <LinkContainer to="/homepage">
-                    <Nav.Link>Home</Nav.Link>
+                        <Nav.Link>Home</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/">
-                    <Nav.Link>Login</Nav.Link>
+                        <Nav.Link>Login</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/profile">
+                        <Nav.Link>Profile</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/makeaccounts">
-                    <Nav.Link>Sign Up</Nav.Link>
+                        <Nav.Link>Sign Up</Nav.Link>
                     </LinkContainer>
                 </Nav>
                 <Form onSubmit={this.Search} inline>

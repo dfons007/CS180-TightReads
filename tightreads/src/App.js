@@ -1,12 +1,10 @@
-import React, {Component} from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect
 } from "react-router-dom";
 
@@ -17,6 +15,7 @@ import MakeAccountsPage from "./pages/makeaccounts";
 import BookProfile from "./pages/book_UI";
 import HomePage from "./pages/homepage";
 import Books from './Books';
+import ProfilePage from './pages/profile';
 
 
 function App() {
@@ -28,6 +27,7 @@ function App() {
       <Route exact path="/bookprofile" component={BookProfile}/>
       <Route exact path="/homepage" component={HomePage}/>
       <Route exact path="/books" component={Books}/>
+      <Route exact path="/profile" component={ProfilePage}/>
       <Route exact path="/404" component={NotFoundPage}/>  {/*} Redirect to 404 Page at end of component if no other component found */}
       <Redirect to="/404"/>
       </Switch>

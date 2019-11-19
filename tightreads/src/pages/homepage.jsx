@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import {Redirect} from 'react-router-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+
 import {Navbar, Nav,Row, Col, Form, FormControl, Button, Carousel, Container, CardDeck, Card} from 'react-bootstrap';
 import firebase from "../firebase";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getGoogleBook, getGoogleSearch } from '../google.js';
+import { getGoogleSearch } from '../google.js';
 import { LinkContainer } from 'react-router-bootstrap'
 
 class HomePage extends Component {
@@ -14,7 +13,7 @@ class HomePage extends Component {
       uid:'',
       recommended:'',
       authflag: true,
-        query: '',
+      query:'',
     };
     this.data = [];
     this.bookitems =[];
@@ -34,26 +33,26 @@ class HomePage extends Component {
     }
 
   componentDidMount(){
-    const subject = "horror";//this.props.match.params;
-
+    var that = this;
     firebase.auth().onAuthStateChanged((user)=>{
       if(user){
         if(this.state.authflag){
           firebase.database().ref('users/'+user.uid).once('value')
               .then(function(snapshot){
-                //that.setState({}); get recommended category
+                  that.setState({recommended: snapshot.val().Genres[0].value});
+                  console.log(snapshot.val().Genres[0].value);
               });
-          const subject = "horror";
           this.setState({uid:user.uid});
           console.log('user', this.state.uid);
           this.setState({authflag:false});
         }
       }else{
         console.log('no user'); // Redirect to login
+          this.props.history.push('/');
       }
     });
 
-    getGoogleSearch(subject).then(data=>{
+    getGoogleSearch(this.state.recommended).then(data=>{
       this.data = data;
       console.log(this.data);
       console.log(this.data.items[1].volumeInfo);
@@ -93,28 +92,30 @@ render() {
   return (
     <>
 {/* search bar */}
-      <Navbar bg="dark" variant="dark">
-        <LinkContainer to="/homepage">
-        <Navbar.Brand href="#home">TightReads</Navbar.Brand>
-        </LinkContainer>
-        <Nav className="mr-auto">
-              <LinkContainer to="/homepage">
-              <Nav.Link>Home</Nav.Link>
-              </LinkContainer>
+        <Navbar bg="dark" variant="dark">
+            <LinkContainer to="/homepage">
+                <Navbar.Brand href="#home">TightReads</Navbar.Brand>
+            </LinkContainer>
+            <Nav className="mr-auto">
+                <LinkContainer to="/homepage">
+                    <Nav.Link>Home</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/">
+                    <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/profile">
+                    <Nav.Link>Profile</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/makeaccounts">
+                    <Nav.Link>Sign Up</Nav.Link>
+                </LinkContainer>
+            </Nav>
+            <Form onSubmit={this.Search} inline>
+                <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
+                <Button type="submit" variant="outline-light">Search</Button>
+            </Form>
+        </Navbar>
 
-              <LinkContainer to="/">
-              <Nav.Link>Login</Nav.Link>
-              </LinkContainer>
-
-              <LinkContainer to="/makeaccounts">
-              <Nav.Link>Sign Up</Nav.Link>
-              </LinkContainer>
-        </Nav>
-          <Form onSubmit={this.Search} inline>
-              <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
-              <Button type="submit" variant="outline-light">Search</Button>
-          </Form>
-      </Navbar>
 
 
       <h1>Welcome to TightReads</h1>

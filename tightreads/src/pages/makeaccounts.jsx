@@ -24,20 +24,22 @@ class MakeAccountsPage extends Component {
             password: '',
             repassword: '',
             biography: '',
-            favGenres: [],
+            favGenres: ['Horror', 'Fiction'],
             query:'',
         };
         this.handleChange = this.handleChange.bind(this);   //Bind events to this state
         this.handleSubmit = this.handleSubmit.bind(this);
         this.Search = this.Search.bind(this);
+        this.tempgenre = [];
 
     }
 
     handleInputChange = (value, e) => {
-        console.log(value);
-        if (e.action === "input-change") {
-            this.setState({[e.target.name]: value});
-        }
+        console.log(e);
+        this.tempgenre = value;
+        this.setState({favGenres: this.tempgenre});
+        console.log(this.state.favGenres);
+        console.log(this.tempgenre);
     };
 
     Search(event){
@@ -74,8 +76,8 @@ class MakeAccountsPage extends Component {
                             bio: this.state.biography,
                             email: this.state.email,
                         });
-                        firebase.database().ref('users/'+ firebaseUser.user.uid).push(
-                            this.state.favGenres,
+                        firebase.database().ref('users/'+ firebaseUser.user.uid).child('Genres').update(
+                            this.tempgenre,
                             err => console.log(err ? 'error while pushing':'success')
                         )
                     }
@@ -117,6 +119,9 @@ class MakeAccountsPage extends Component {
                         <LinkContainer to="/">
                             <Nav.Link>Login</Nav.Link>
                         </LinkContainer>
+                        <LinkContainer to="/profile">
+                            <Nav.Link>Profile</Nav.Link>
+                        </LinkContainer>
                         <LinkContainer to="/makeaccounts">
                             <Nav.Link>Sign Up</Nav.Link>
                         </LinkContainer>
@@ -128,7 +133,7 @@ class MakeAccountsPage extends Component {
                 </Navbar>
 
                 <br/>
-                <br/>
+
                 <form class="text-center border border-light p-5" action="#!" onSubmit={this.handleSubmit}>
                     <h1 class="display-3 mb-4">Welcome to Tight Reads</h1>
                     <p class="h3 mb-3">Sign up</p>
@@ -179,7 +184,7 @@ class MakeAccountsPage extends Component {
                         placeholder="Select Favorite Genre:"
                         options={options.map(x => MakeOption(x))}
                         closeMenuOnSelect={false}
-                        onInputChange={this.handleInputChange}
+                        onChange={this.handleInputChange}
                         inputValue={this.state.value}
                     />
 

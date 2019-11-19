@@ -1,6 +1,4 @@
-import React, {Component} from 'react';
-import Books from './Books';
-import BookCard from './BookCard';
+import React from 'react';
 import {CardDeck, Card, Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
 

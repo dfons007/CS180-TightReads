@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Books from './Books';
 
 //renders google books API data on UI
 const BookCard = (props)=>

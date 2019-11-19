@@ -1,6 +1,4 @@
-import React, {Component} from 'react';
-import Books from './Books';
-
+import React from 'react';
 //input and search button
 const SearchArea = (props)=>
 {

@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import SearchArea from './SearchArea';
 import request from 'superagent';
 import BookList from './BookList';
 import {LinkContainer} from "react-router-bootstrap";
-import {Button, Form, FormControl, Nav, Navbar, CardDeck, Card} from "react-bootstrap";
+import {Button, Form, FormControl, Nav, Navbar} from "react-bootstrap";
 
 
 //contains all the book search logic
@@ -68,6 +67,9 @@ class Books extends Component
                   <LinkContainer to="/">
                       <Nav.Link>Login</Nav.Link>
                   </LinkContainer>
+                  <LinkContainer to="/profile">
+                      <Nav.Link>Profile</Nav.Link>
+                  </LinkContainer>
                   <LinkContainer to="/makeaccounts">
                       <Nav.Link>Sign Up</Nav.Link>
                   </LinkContainer>
@@ -78,7 +80,6 @@ class Books extends Component
               </Form>
           </Navbar>
 
-          <br/>
           <br/>
           {/* passes in handleSearch and searchBook method */}
           {/* passes data in state to BookList Component */}

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import {Link, Redirect} from "react-router-dom";
-import {MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
-import { getGoogleBook, getGoogleSearch } from '../google.js';
+import { getGoogleBook} from '../google.js';
+import firebase from "../firebase";
 
 class Book_UI extends Component {
 	constructor(props){
@@ -17,6 +16,8 @@ class Book_UI extends Component {
 			genre: 'BOOK GENRE',
 			summary: 'This is the book sumary... blah blah blah...',
             artwork: "https://via.placeholder.com/500",
+			authflag:true,
+			uid:'',
 
 		};
 		this.handleChange = this.handleChange.bind(this);
@@ -33,31 +34,33 @@ class Book_UI extends Component {
 		this.props.history.push({pathname:'/books',state:{query:this.state.query}});
 	}
 
+
 	render() {
 		return (
 
 			<>
-
-
 				<Navbar bg="dark" variant="dark">
-				<LinkContainer to="/homepage">
-				<Navbar.Brand href="#home">TightReads</Navbar.Brand>
-				</LinkContainer>
-				<Nav className="mr-auto">
 					<LinkContainer to="/homepage">
-					<Nav.Link>Home</Nav.Link>
+						<Navbar.Brand href="#home">TightReads</Navbar.Brand>
 					</LinkContainer>
-					<LinkContainer to="/">
-					<Nav.Link>Login</Nav.Link>
-					</LinkContainer>
-					<LinkContainer to="/makeaccounts">
-					<Nav.Link>Sign Up</Nav.Link>
-					</LinkContainer>            
-				</Nav>
-				<Form onSubmit={this.Search} inline>
-					<FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
-					<Button type="submit" variant="outline-light">Search</Button>
-				</Form>
+					<Nav className="mr-auto">
+						<LinkContainer to="/homepage">
+							<Nav.Link>Home</Nav.Link>
+						</LinkContainer>
+						<LinkContainer to="/">
+							<Nav.Link>Login</Nav.Link>
+						</LinkContainer>
+						<LinkContainer to="/profile">
+							<Nav.Link>Profile</Nav.Link>
+						</LinkContainer>
+						<LinkContainer to="/makeaccounts">
+							<Nav.Link>Sign Up</Nav.Link>
+						</LinkContainer>
+					</Nav>
+					<Form onSubmit={this.Search} inline>
+						<FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
+						<Button type="submit" variant="outline-light">Search</Button>
+					</Form>
 				</Navbar>
 
 				<br/>
@@ -98,6 +101,18 @@ class Book_UI extends Component {
 	}
     
     componentDidMount() {
+		firebase.auth().onAuthStateChanged((user)=>{
+			if(user){
+				if(this.state.authflag){
+					this.setState({uid:user.uid});
+					console.log('user', this.state.uid);
+					this.setState({authflag:false});
+				}
+			}else{
+				console.log('no user'); // Redirect to login
+				this.props.history.push('/');
+			}
+		});
 	    var id;
 	    if(this.props.location.state.id != null){
 	        id = this.props.location.state.id;
