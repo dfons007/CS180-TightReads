@@ -127,6 +127,7 @@ componentDidMount() {
             <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
             <Button type="submit" variant="outline-light">Search</Button>
           </Form>
+          <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
         </Navbar>
 
         <br/>

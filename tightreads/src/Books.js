@@ -20,6 +20,7 @@ class Books extends Component
     }
 
     Search(event){
+        event.preventDefault();
         console.log(this.state.query);
         this.props.history.push({pathname:'/books',state:{query:this.state.query}});
     }
@@ -27,7 +28,10 @@ class Books extends Component
         this.setState({[event.target.name]: event.target.value});
     }
     componentDidMount(){
-        var id = this.props.location.state.query;
+        if(this.props.location.state.query === undefined)
+            var id = this.state.query;
+        else
+            var id = this.props.location.state.query;
         console.log(id);
         request
             .get("https://www.googleapis.com/books/v1/volumes")

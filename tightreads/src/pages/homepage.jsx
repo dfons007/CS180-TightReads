@@ -11,8 +11,9 @@ class HomePage extends Component {
     super(props);
     this.state = {
       uid:'',
-      recommended:'',
+      recommended:'Horror',
       authflag: true,
+        booksdone:false,
       query:'',
     };
     this.data = [];
@@ -32,15 +33,47 @@ class HomePage extends Component {
         this.props.history.push({pathname:'/books',state:{query:this.state.query}});
     }
 
-  componentDidMount(){
+  async componentDidMount(){
     var that = this;
     firebase.auth().onAuthStateChanged((user)=>{
       if(user){
         if(this.state.authflag){
           firebase.database().ref('users/'+user.uid).once('value')
               .then(function(snapshot){
-                  that.setState({recommended: snapshot.val().Genres[0].value});
-                  console.log(snapshot.val().Genres[0].value);
+                  var rand = Math.floor( Math.random() * (snapshot.val().Genres.length - 0));
+                  that.setState({recommended: snapshot.val().Genres[rand].value});
+                  console.log(snapshot.val().Genres[rand].value);
+                  getGoogleSearch(that.state.recommended).then(data=>{
+                      that.data = data;
+                      console.log(that.state.recommended);
+                      for(let i = 0; i < 6; i++){
+                          that.bookitems.push(
+                              <Card>
+                                  <Card.Img variant="top" src={that.data.items[i].volumeInfo.imageLinks.thumbnail} />
+                                  <Card.Body>
+                                      <Card.Title>{that.data.items[i].volumeInfo.title}</Card.Title>
+                                      <Card.Text>
+                                          {that.data.items[i].volumeInfo.authors}
+
+                                          {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
+
+                                      </Card.Text>
+                                  </Card.Body>
+                                  <Card.Footer>
+                                      {/* <small className="text-muted">Genre</small> */}
+                                      <Button variant="secondary" size="sm" onClick={()=>
+                                          that.props.history.push({pathname:'/bookprofile', state:{id:that.data.items[i].id}})
+                                      }>
+                                          More Info
+                                      </Button>
+
+                                  </Card.Footer>
+                              </Card>
+                          );
+                      }
+                      that.setState({booksdone:true});
+                  });
+                  that.setState({authflag:false});
               });
           this.setState({uid:user.uid});
           console.log('user', this.state.uid);
@@ -51,45 +84,13 @@ class HomePage extends Component {
           this.props.history.push('/');
       }
     });
-
-    getGoogleSearch(this.state.recommended).then(data=>{
-      this.data = data;
-      console.log(this.data);
-      console.log(this.data.items[1].volumeInfo);
-      console.log(this.data.items[1].volumeInfo.authors);
-      console.log(this.data.items[1].volumeInfo.imageLinks.thumbnail);
-      console.log(this.data);
-      for(let i = 0; i < 6; i++){
-        this.bookitems.push(
-            <Card>
-              <Card.Img variant="top" src={this.data.items[i].volumeInfo.imageLinks.thumbnail} />
-              <Card.Body>
-                <Card.Title>{this.data.items[i].volumeInfo.title}</Card.Title>
-                <Card.Text>
-                  {this.data.items[i].volumeInfo.authors}
-
-                  {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
-
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                {/* <small className="text-muted">Genre</small> */}
-                <Button variant="secondary" size="sm" onClick={()=>
-                  this.props.history.push({pathname:'/bookprofile', state:{id:this.data.items[i].id}})
-                }>
-                  More Info
-                  </Button>
-
-              </Card.Footer>
-            </Card>
-        );
-      }
-    });
-    console.log(this.data);
-
   }
 render() {
-  return (
+    if(!this.state.booksdone){
+        console.log("Not done");
+        return null;
+    }
+    else return (
     <>
 {/* search bar */}
         <Navbar bg="dark" variant="dark">

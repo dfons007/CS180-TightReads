@@ -59,7 +59,7 @@ class LoginPage extends Component {
         });
         event.preventDefault();
         console.log('here end');
-        this.props.history.push('/profile');
+        this.props.history.push('/homepage');
     }
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user)=>{
@@ -68,7 +68,6 @@ class LoginPage extends Component {
                     this.setState({uid:user.uid});
                     console.log('user', this.state.uid);
                     this.setState({authflag:false});
-                    this.props.history.push('/homepage');
                 }
             }else{
                 console.log('no user'); // Redirect to login
