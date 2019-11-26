@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+<<<<<<< HEAD
 import { BrowserRouter as Router } from 'react-router-dom';
 import {Navbar, Nav,Row, Col, Form, FormControl, Button, Carousel, Container, CardDeck, Card} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +20,126 @@ render() {
           <Button variant="outline-light">Search</Button>
         </Form>
       </Navbar>
+=======
+
+import {Navbar, Nav,Row, Col, Form, FormControl, Button, Carousel, Container, CardDeck, Card} from 'react-bootstrap';
+import firebase from "../firebase";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { getGoogleSearch } from '../google.js';
+import { LinkContainer } from 'react-router-bootstrap'
+
+class HomePage extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      uid:'',
+      recommended:'Horror',
+      authflag: true,
+        booksdone:false,
+      query:'',
+    };
+    this.data = [];
+    this.bookitems =[];
+
+    this.handleChange = this.handleChange.bind(this);
+    this.Search = this.Search.bind(this);
+  }
+
+    handleChange(event) {    //Event change handler will set our state variables
+        this.setState({[event.target.name]: event.target.value});
+    }
+
+    Search(event){
+        event.preventDefault();
+        console.log(this.state.query);
+        this.props.history.push({pathname:'/books',state:{query:this.state.query}});
+    }
+
+  async componentDidMount(){
+    var that = this;
+    firebase.auth().onAuthStateChanged((user)=>{
+      if(user){
+        if(this.state.authflag){
+          firebase.database().ref('users/'+user.uid).once('value')
+              .then(function(snapshot){
+                  var rand = Math.floor( Math.random() * (snapshot.val().Genres.length - 0));
+                  that.setState({recommended: snapshot.val().Genres[rand].value});
+                  console.log(snapshot.val().Genres[rand].value);
+                  getGoogleSearch(that.state.recommended).then(data=>{
+                      that.data = data;
+                      console.log(that.state.recommended);
+                      for(let i = 0; i < 6; i++){
+                          that.bookitems.push(
+                              <Card>
+                                  <Card.Img variant="top" src={that.data.items[i].volumeInfo.imageLinks.thumbnail} />
+                                  <Card.Body>
+                                      <Card.Title>{that.data.items[i].volumeInfo.title}</Card.Title>
+                                      <Card.Text>
+                                          {that.data.items[i].volumeInfo.authors}
+
+                                          {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
+
+                                      </Card.Text>
+                                  </Card.Body>
+                                  <Card.Footer>
+                                      {/* <small className="text-muted">Genre</small> */}
+                                      <Button variant="secondary" size="sm" onClick={()=>
+                                          that.props.history.push({pathname:'/bookprofile', state:{id:that.data.items[i].id}})
+                                      }>
+                                          More Info
+                                      </Button>
+
+                                  </Card.Footer>
+                              </Card>
+                          );
+                      }
+                      that.setState({booksdone:true});
+                  });
+                  that.setState({authflag:false});
+              });
+          this.setState({uid:user.uid});
+          console.log('user', this.state.uid);
+          this.setState({authflag:false});
+        }
+      }else{
+        console.log('no user'); // Redirect to login
+          this.props.history.push('/');
+      }
+    });
+  }
+render() {
+    if(!this.state.booksdone){
+        console.log("Not done");
+        return null;
+    }
+    else return (
+    <>
+{/* search bar */}
+        <Navbar bg="dark" variant="dark">
+            <LinkContainer to="/homepage">
+                <Navbar.Brand href="#home">TightReads</Navbar.Brand>
+            </LinkContainer>
+            <Nav className="mr-auto">
+                <LinkContainer to="/homepage">
+                    <Nav.Link>Home</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/">
+                    <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/profile">
+                    <Nav.Link>Profile</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/makeaccounts">
+                    <Nav.Link>Sign Up</Nav.Link>
+                </LinkContainer>
+            </Nav>
+            <Form onSubmit={this.Search} inline>
+                <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
+                <Button type="submit" variant="outline-light">Search</Button>
+            </Form>
+        </Navbar>
+
+>>>>>>> 613a9477f9a3da1a6e4eeb89d81f7d8c5419100d
 
 
       <h1>Welcome to TightReads</h1>
@@ -86,6 +207,7 @@ render() {
       <br/>
 
 
+<<<<<<< HEAD
       <h2>Popular</h2>
 
       <CardDeck>
@@ -172,6 +294,13 @@ render() {
         </Card.Footer>
       </Card>
     </CardDeck>
+=======
+      <h2>Recommended for you</h2>
+
+      <CardDeck>
+        {this.bookitems}
+      </CardDeck>
+>>>>>>> 613a9477f9a3da1a6e4eeb89d81f7d8c5419100d
 
 
     </>
