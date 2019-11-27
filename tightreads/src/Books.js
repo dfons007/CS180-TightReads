@@ -3,6 +3,7 @@ import request from 'superagent';
 import BookList from './BookList';
 import {LinkContainer} from "react-router-bootstrap";
 import {Button, Form, FormControl, Nav, Navbar} from "react-bootstrap";
+import firebase from "firebase";
 
 
 //contains all the book search logic
@@ -17,6 +18,17 @@ class Books extends Component
         };
         this.Search = this.Search.bind(this);
         this.handleChange = this.handleChange.bind(this);
+
+        this.signout = this.signout.bind(this);
+    }
+
+    signout(event){
+      console.log("signout button pressed");
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }).catch(function(error) {
+        // An error happened.
+      });
     }
 
     Search(event){
@@ -82,6 +94,7 @@ class Books extends Component
                   <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
                   <Button type="submit" variant="outline-light">Search</Button>
               </Form>
+              <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
           </Navbar>
 
           <br/>
