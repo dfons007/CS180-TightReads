@@ -21,7 +21,16 @@ class HomePage extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.Search = this.Search.bind(this);
+    this.signout = this.signout.bind(this);
   }
+    signout(event){
+      console.log("signout button pressed");
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }).catch(function(error) {
+        // An error happened.
+      });
+    }
 
     handleChange(event) {    //Event change handler will set our state variables
         this.setState({[event.target.name]: event.target.value});
@@ -110,11 +119,15 @@ render() {
                 <LinkContainer to="/makeaccounts">
                     <Nav.Link>Sign Up</Nav.Link>
                 </LinkContainer>
+
             </Nav>
+
             <Form onSubmit={this.Search} inline>
                 <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
                 <Button type="submit" variant="outline-light">Search</Button>
             </Form>
+
+            <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
         </Navbar>
 
 
