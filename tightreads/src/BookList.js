@@ -15,14 +15,14 @@ const BookList = props =>
                     var image = (book.volumeInfo.imageLinks) ? book.volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
                     var imageStyle = {}
                     
-                    if(book.volumeInfo.authors && props.authors[book.volumeInfo.authors[0]])
+                    if(book.volumeInfo.authors && props.authors[book.volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')])
                     {
-                        if(props.authors[book.volumeInfo.authors[0]] === "black")
+                        if(props.authors[book.volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')] === "black")
                         {
                             imageStyle = {filter: "grayscale(100%) blur(5px)"}
                         }
                         
-                        else if(props.authors[book.volumeInfo.authors[0]] === "white")
+                        else if(props.authors[book.volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')] === "white")
                         {
                             imageStyle = {
                                     filter: "contrast(120%)",
@@ -31,15 +31,12 @@ const BookList = props =>
                                     }
                         }
                     }
-                    console.log("authors")
-                    console.log(props.authors)
-                    console.log(imageStyle)
                     return(<Card>
                         <Card.Img variant="top" src={image} style={imageStyle} />
                         <Card.Body>
                             <Card.Title>{book.volumeInfo.title}</Card.Title>
                             <Card.Text>
-                                {book.volumeInfo.authors}
+                                {book.volumeInfo.authors[0]}
 
                                 {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
 

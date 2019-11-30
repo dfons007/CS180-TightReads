@@ -39,8 +39,6 @@ class Books extends Component
                 }.bind(this));
             }
         });
-        console.log("this.state.authors")
-        console.log(this.state.authors)
         
         var id;
         if(this.props.location.state.query === undefined)

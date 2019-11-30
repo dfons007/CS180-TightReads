@@ -86,7 +86,7 @@ class Book_UI extends Component {
                             <h5>
                                 <Button variant="secondary" size="sm" onClick={()=>
                                     firebase.database().ref('users/'+ this.state.uid).child('Authors').update(
-                                    {[this.state.author]:"black"},
+                                    {[this.state.author.replace(/[.#$\/\[\]]/gi,'')]:"black"},
                                     err => console.log(err ? 'error while pushing':'success')   
                                 )
                                 }>
@@ -95,7 +95,7 @@ class Book_UI extends Component {
                                 
                                 <Button variant="secondary" size="sm" onClick={()=>
                                     firebase.database().ref('users/'+ this.state.uid).child('Authors').update(
-                                    {[this.state.author]:"white"},
+                                    {[this.state.author.replace(/[.#$\/\[\]]/gi,'')]:"white"},
                                     err => console.log(err ? 'error while pushing':'success')   
                                 )
                                 }>

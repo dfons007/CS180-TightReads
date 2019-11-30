@@ -49,14 +49,14 @@ class HomePage extends Component {
                           var image = (that.data.items[i].volumeInfo.imageLinks) ? that.data.items[i].volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
                           var imageStyle = {}
                           
-                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]])
+                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')])
                           {
-                            if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]] === "black")
+                            if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')] === "black")
                             {
                                 imageStyle = {filter: "grayscale(100%) blur(5px)"}
                             }
                             
-                            else if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]] === "white")
+                            else if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')] === "white")
                             {
                                 imageStyle = {
                                     filter: "contrast(120%)",
@@ -72,7 +72,7 @@ class HomePage extends Component {
                                   <Card.Body>
                                       <Card.Title>{that.data.items[i].volumeInfo.title}</Card.Title>
                                       <Card.Text>
-                                          {that.data.items[i].volumeInfo.authors}
+                                          {that.data.items[i].volumeInfo.authors[0]}
 
                                           {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
 
