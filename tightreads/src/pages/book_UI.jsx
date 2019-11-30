@@ -70,9 +70,6 @@ class Book_UI extends Component {
 
 				<div class="container">
 
-
-
-
 					<div class="row">
 						<div class="col-sm-4">
 							<img src={this.state.artwork} alt='book image' width={350} height={500} mode='fit'/>
@@ -86,6 +83,30 @@ class Book_UI extends Component {
 							<h5>
 								<b>Author: </b> {this.state.author} 
 							</h5>
+                            <h5>
+                                <Button variant="secondary" size="sm" onClick={()=>
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').update(
+                                    {[this.state.author]:"black"},
+                                    err => console.log(err ? 'error while pushing':'success')   
+                                )
+                                }>
+                                Blacklist Author
+                                </Button>
+                                
+                                <Button variant="secondary" size="sm" onClick={()=>
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').update(
+                                    {[this.state.author]:"white"},
+                                    err => console.log(err ? 'error while pushing':'success')   
+                                )
+                                }>
+                                Whitelist Author
+                                </Button>
+                                <Button variant="secondary" size="sm" onClick={()=>
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').child(this.state.author).remove()
+                                }>
+                                Remove Author from Whitelist/Blacklist
+                                </Button>
+                            </h5>
 							<h5>
 								<b>Genre: </b> {this.state.genre} 
 							</h5>
