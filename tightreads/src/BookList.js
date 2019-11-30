@@ -16,14 +16,14 @@ const BookList = props =>
                     var imageStyle = {}
                     var author = (book.volumeInfo.authors) ? book.volumeInfo.authors[0] : ''
                     
-                    if(book.volumeInfo.authors && props.authors[author.replace(/[.#$\/\[\]]/gi,'')])
+                    if(book.volumeInfo.authors && props.authors[author.replace(/[.#$/[\]]/gi,'')])
                     {
-                        if(props.authors[book.volumeInfo.authors[0].replace(/[.#$\/\[\]]/gi,'')] === "black")
+                        if(props.authors[book.volumeInfo.authors[0].replace(/[.#$/[\]]/gi,'')] === "black")
                         {
                             imageStyle = {filter: "grayscale(100%) blur(5px)"}
                         }
                         
-                        else if(props.authors[author.replace(/[.#$\/\[\]]/gi,'')] === "white")
+                        else if(props.authors[author.replace(/[.#$/[\]]/gi,'')] === "white")
                         {
                             imageStyle = {
                                     filter: "contrast(120%)",

@@ -50,14 +50,14 @@ class HomePage extends Component {
                           var imageStyle = {}
                           var author = (that.data.items[i].volumeInfo.authors) ? that.data.items[i].volumeInfo.authors[0] : ''
                           
-                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[author.replace(/[.#$\/\[\]]/gi,'')])
+                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')])
                           {
-                            if(snapshot.val().Authors[author.replace(/[.#$\/\[\]]/gi,'')] === "black")
+                            if(snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')] === "black")
                             {
                                 imageStyle = {filter: "grayscale(100%) blur(5px)"}
                             }
                             
-                            else if(snapshot.val().Authors[author.replace(/[.#$\/\[\]]/gi,'')] === "white")
+                            else if(snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')] === "white")
                             {
                                 imageStyle = {
                                     filter: "contrast(120%)",
