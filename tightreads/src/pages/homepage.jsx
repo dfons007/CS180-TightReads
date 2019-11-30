@@ -46,17 +46,17 @@ class HomePage extends Component {
                       that.data = data;
                       console.log(that.state.recommended);
                       for(let i = 0; i < 6; i++){
-                          var image = that.data.items[i].volumeInfo.imageLinks.thumbnail
+                          var image = (that.data.items[i].volumeInfo.imageLinks) ? that.data.items[i].volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
                           var imageStyle = {}
                           
                           if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]])
                           {
-                            if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]] == "black")
+                            if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]] === "black")
                             {
                                 imageStyle = {filter: "grayscale(100%) blur(5px)"}
                             }
                             
-                            else if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]] == "white")
+                            else if(snapshot.val().Authors[that.data.items[i].volumeInfo.authors[0]] === "white")
                             {
                                 imageStyle = {
                                     filter: "contrast(120%)",

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Link, Redirect} from "react-router-dom";
-import {MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
+//import {Link, Redirect} from "react-router-dom";
+//import {MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 import { getGoogleBook} from '../google.js';
@@ -72,7 +72,7 @@ class Book_UI extends Component {
 
 					<div class="row">
 						<div class="col-sm-4">
-							<img src={this.state.artwork} alt='book image' width={350} height={500} mode='fit'/>
+							<img src={this.state.artwork} alt='book' width={350} height={500} mode='fit'/>
 						</div>
 
 						<div class="col-sm-8">

@@ -34,17 +34,19 @@ class Books extends Component
         firebase.auth().onAuthStateChanged((user)=>{
             if(user){
                 firebase.database().ref('users/'+user.uid).once('value').then(function(snapshot){
-                    this.state.authors = snapshot.val().Authors
+                    this.setState({authors: snapshot.val().Authors});
+                    //this.state.authors = snapshot.val().Authors
                 }.bind(this));
             }
         });
         console.log("this.state.authors")
         console.log(this.state.authors)
         
+        var id;
         if(this.props.location.state.query === undefined)
-            var id = this.state.query;
+            id = this.state.query;
         else
-            var id = this.props.location.state.query;
+            id = this.props.location.state.query;
         console.log(id);
         request
             .get("https://www.googleapis.com/books/v1/volumes")

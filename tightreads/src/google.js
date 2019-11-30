@@ -1,6 +1,6 @@
 const googleAPI_query = "https://www.googleapis.com/books/v1/volumes?q=";
 const googleAPI_volume = "https://www.googleapis.com/books/v1/volumes/";
-const googleAPI_key = "9ba33c1405766c09e70821e1ab6b426400a0940d";
+//const googleAPI_key = "9ba33c1405766c09e70821e1ab6b426400a0940d";
 
 export function getGoogleBook(id)
 {

@@ -1,7 +1,6 @@
 import React from 'react';
 import {CardDeck, Card, Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
-import firebase from "./firebase"
 
 //renders google books API data on UI
 const BookList = props =>
@@ -13,17 +12,17 @@ const BookList = props =>
             {/* renders out individual book cards */}
             {
                 props.books.map((book, i) => {
-                    var image = book.volumeInfo.imageLinks.thumbnail
+                    var image = (book.volumeInfo.imageLinks) ? book.volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
                     var imageStyle = {}
                     
                     if(book.volumeInfo.authors && props.authors[book.volumeInfo.authors[0]])
                     {
-                        if(props.authors[book.volumeInfo.authors[0]] == "black")
+                        if(props.authors[book.volumeInfo.authors[0]] === "black")
                         {
                             imageStyle = {filter: "grayscale(100%) blur(5px)"}
                         }
                         
-                        else if(props.authors[book.volumeInfo.authors[0]] == "white")
+                        else if(props.authors[book.volumeInfo.authors[0]] === "white")
                         {
                             imageStyle = {
                                     filter: "contrast(120%)",

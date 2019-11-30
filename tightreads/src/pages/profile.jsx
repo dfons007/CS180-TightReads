@@ -151,7 +151,7 @@ componentDidMount() {
                         className="img-fluid"
                         // src="https://mdbootstrap.com/img/Photos/Slides/1.jpg"
                         src = "https://s.abcnews.com/images/Lifestyle/puppy-ht-3-er-170907_4x3_992.jpg"
-                        alt="Profile Picture"
+                        alt="Profile"
                     />
                     <a href="#!">
                       <MDBMask overlay="white-slight" className="waves-light" />
