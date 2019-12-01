@@ -102,7 +102,7 @@ class Book_UI extends Component {
                                 Whitelist Author
                                 </Button>
                                 <Button variant="secondary" size="sm" onClick={()=>
-                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').child(this.state.author).remove()
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').child(this.state.author.replace(/[.#$/[\]]/gi,'')).remove()
                                 }>
                                 Remove Author from Whitelist/Blacklist
                                 </Button>
