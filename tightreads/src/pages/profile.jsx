@@ -38,8 +38,6 @@ class ProfilePage extends Component {
     var html = event.currentTarget.textContent;
     this.setState({genres: html});
   }
-
-
   handleChangeBio(event){
     var html = event.currentTarget.textContent;
     this.setState({ bio: html });
