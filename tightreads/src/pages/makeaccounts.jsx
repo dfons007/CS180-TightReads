@@ -141,7 +141,7 @@ class MakeAccountsPage extends Component {
                         <Button type="submit" variant="outline-light">Search</Button>
                     </Form>
 
-                    <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
+                    <Button type="submit" onClick={this.signout} variant="variant-light">Sign Out</Button>
                 </Navbar>
 
                 <br/>

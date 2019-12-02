@@ -99,24 +99,25 @@ class ProfilePage extends Component {
       this.setState({editmode:false, selectstatus: ""});
       console.log("Editting");
       // do editting
-    }else{
-      this.setState({editmode:true, selectstatus: "none"});
+    }else {
+      this.setState({editmode: true, selectstatus: "none"});
       console.log(this.state.display);
       console.log(this.state.bio);
-      firebase.database().ref('users/'+this.state.uid).update({
-        displayname:this.state.display,
-        bio:this.state.bio,
+      firebase.database().ref('users/' + this.state.uid).update({
+        displayname: this.state.display,
+        bio: this.state.bio,
       });
-      firebase.database().ref('users/'+this.state.uid).child('Genres').set(
-          this.tempgenre
-      );
-
-      this.genres = this.tempgenre[0].value;
-      for(let i = 1; i < this.tempgenre.length; i++){
-          this.genres += ", "+this.tempgenre[i].value;
+      if (this.tempgenre.length !== 0) {
+        firebase.database().ref('users/' + this.state.uid).child('Genres').set(
+            this.tempgenre
+        );
+        this.genres = this.tempgenre[0].value;
+        for (let i = 1; i < this.tempgenre.length; i++) {
+          this.genres += ", " + this.tempgenre[i].value;
+        }
+        console.log(this.tempgenre);
+        this.setState({genrestring: this.genres});
       }
-      console.log(this.tempgenre);
-      this.setState({genrestring:this.genres});
       // save changes and submit to the database
     }
   }
@@ -196,7 +197,7 @@ componentDidMount() {
             <Button type="submit" variant="outline-light">Search</Button>
           </Form>
           <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
-            <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
+          <Button type="submit" onClick={this.signout} variant="outline-light">Sign Out</Button>
           <label style={{backgroundColor: "#343A40" , color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
             Upload Profile Image
             <FileUploader

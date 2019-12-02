@@ -75,7 +75,7 @@ class Book_UI extends Component {
 						<FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
 						<Button type="submit" variant="outline-light">Search</Button>
 					</Form>
-					<Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
+					<Button type="submit" onClick={this.signout} variant="outline-light">Sign Out</Button>
 				</Navbar>
 
 				<br/>

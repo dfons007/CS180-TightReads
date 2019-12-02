@@ -51,13 +51,14 @@ class HomePage extends Component {
                   var rand = Math.floor( Math.random() * (snapshot.val().Genres.length - 0));
                   that.setState({recommended: snapshot.val().Genres[rand].value});
                   console.log(snapshot.val().Genres[rand].value);
+                  console.log(that.state.recommended+"hello");
                   getGoogleSearch(that.state.recommended).then(data=>{
                       that.data = data;
                       console.log(that.state.recommended);
                       for(let i = 0; i < 6; i++){
-                          var image = (that.data.items[i].volumeInfo.imageLinks) ? that.data.items[i].volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
-                          var imageStyle = {}
-                          var author = (that.data.items[i].volumeInfo.authors) ? that.data.items[i].volumeInfo.authors[0] : ''
+                          var image = ((that.data.items[i].volumeInfo.imageLinks) ? that.data.items[i].volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500");
+                          var imageStyle = {};
+                          var author = (that.data.items[i].volumeInfo.authors) ? that.data.items[i].volumeInfo.authors[0] : '';
                           
                           if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors && snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')])
                           {
@@ -147,7 +148,7 @@ render() {
                 <Button type="submit" variant="outline-light">Search</Button>
             </Form>
 
-            <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
+            <Button type="submit" onClick={this.signout} variant="outline-light">Sign Out</Button>
         </Navbar>
 
 
