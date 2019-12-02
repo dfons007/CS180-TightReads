@@ -29,7 +29,19 @@ class ProfilePage extends Component {
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleChangeGenre = this.handleChangeGenre.bind(this);
     this.Search = this.Search.bind(this);
+
+    this.signout = this.signout.bind(this);
   }
+
+  signout(event){
+    console.log("signout button pressed");
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+    }).catch(function(error) {
+      // An error happened.
+    });
+  }
+
   handleChangeDisplay(event){
     var html = event.currentTarget.textContent;
     this.setState({ display: html });
@@ -126,6 +138,8 @@ componentDidMount() {
             <Button type="submit" variant="outline-light">Search</Button>
           </Form>
           <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
+
+          <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
         </Navbar>
 
         <br/>

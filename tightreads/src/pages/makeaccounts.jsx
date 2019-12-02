@@ -32,6 +32,16 @@ class MakeAccountsPage extends Component {
         this.Search = this.Search.bind(this);
         this.tempgenre = [];
 
+        this.signout = this.signout.bind(this);
+    }
+
+    signout(event){
+        console.log("signout button pressed");
+        firebase.auth().signOut().then(function() {
+          // Sign-out successful.
+        }).catch(function(error) {
+          // An error happened.
+        });
     }
 
     handleInputChange = (value, e) => {
@@ -130,6 +140,8 @@ class MakeAccountsPage extends Component {
                         <FormControl name="query" type="text" placeholder="Search Books" className="mr-sm-2" onChange={this.handleChange}/>
                         <Button type="submit" variant="outline-light">Search</Button>
                     </Form>
+
+                    <Button type="submit" onClick={this.signout} variant="light">Sign Out</Button>
                 </Navbar>
 
                 <br/>
