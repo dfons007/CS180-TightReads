@@ -59,7 +59,7 @@ class HomePage extends Component {
                           var imageStyle = {}
                           var author = (that.data.items[i].volumeInfo.authors) ? that.data.items[i].volumeInfo.authors[0] : ''
                           
-                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')])
+                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors && snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')])
                           {
                             if(snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')] === "black")
                             {
