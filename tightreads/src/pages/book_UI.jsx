@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Link, Redirect} from "react-router-dom";
-import {MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
+//import {Link, Redirect} from "react-router-dom";
+//import {MDBRow, MDBCol, MDBCard, MDBCardBody, MDBMask, MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 import { getGoogleBook} from '../google.js';
@@ -82,12 +82,9 @@ class Book_UI extends Component {
 
 				<div class="container">
 
-
-
-
 					<div class="row">
 						<div class="col-sm-4">
-							<img src={this.state.artwork} alt='book image' width={350} height={500} mode='fit'/>
+							<img src={this.state.artwork} alt='book' width={350} height={500} mode='fit'/>
 						</div>
 
 						<div class="col-sm-8">
@@ -98,6 +95,30 @@ class Book_UI extends Component {
 							<h5>
 								<b>Author: </b> {this.state.author} 
 							</h5>
+                            <h5>
+                                <Button variant="secondary" size="sm" onClick={()=>
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').update(
+                                    {[this.state.author.replace(/[.#$/[\]]/gi,'')]:"black"},
+                                    err => console.log(err ? 'error while pushing':'success')   
+                                )
+                                }>
+                                Blacklist Author
+                                </Button>
+                                
+                                <Button variant="secondary" size="sm" onClick={()=>
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').update(
+                                    {[this.state.author.replace(/[.#$/[\]]/gi,'')]:"white"},
+                                    err => console.log(err ? 'error while pushing':'success')   
+                                )
+                                }>
+                                Whitelist Author
+                                </Button>
+                                <Button variant="secondary" size="sm" onClick={()=>
+                                    firebase.database().ref('users/'+ this.state.uid).child('Authors').child(this.state.author.replace(/[.#$/[\]]/gi,'')).remove()
+                                }>
+                                Remove Author from Whitelist/Blacklist
+                                </Button>
+                            </h5>
 							<h5>
 								<b>Genre: </b> {this.state.genre} 
 							</h5>

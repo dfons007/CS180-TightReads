@@ -55,13 +55,34 @@ class HomePage extends Component {
                       that.data = data;
                       console.log(that.state.recommended);
                       for(let i = 0; i < 6; i++){
+                          var image = (that.data.items[i].volumeInfo.imageLinks) ? that.data.items[i].volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
+                          var imageStyle = {}
+                          var author = (that.data.items[i].volumeInfo.authors) ? that.data.items[i].volumeInfo.authors[0] : ''
+                          
+                          if(that.data.items[i].volumeInfo.authors && snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')])
+                          {
+                            if(snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')] === "black")
+                            {
+                                imageStyle = {filter: "grayscale(100%) blur(5px)"}
+                            }
+                            
+                            else if(snapshot.val().Authors[author.replace(/[.#$/[\]]/gi,'')] === "white")
+                            {
+                                imageStyle = {
+                                    filter: "contrast(120%)",
+                                    //x, y, (edge)blur, spread(size), color,
+                                    "boxShadow": "0px 0px 3px 4px rgba(255,255,0,0.4), 0px 0px 3px 8px rgba(0,255,255,0.4), 0px 0px 3px 12px rgba(255,0,255,0.4)"
+                                    }
+                            }
+                          }
+                          
                           that.bookitems.push(
                               <Card>
-                                  <Card.Img variant="top" src={that.data.items[i].volumeInfo.imageLinks.thumbnail} />
+                                  <Card.Img variant="top" src={image} style={imageStyle} />
                                   <Card.Body>
                                       <Card.Title>{that.data.items[i].volumeInfo.title}</Card.Title>
                                       <Card.Text>
-                                          {that.data.items[i].volumeInfo.authors}
+                                          {author}
 
                                           {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
 

@@ -3,7 +3,7 @@ import request from 'superagent';
 import BookList from './BookList';
 import {LinkContainer} from "react-router-bootstrap";
 import {Button, Form, FormControl, Nav, Navbar} from "react-bootstrap";
-import firebase from "firebase";
+import firebase from "./firebase";
 
 
 //contains all the book search logic
@@ -12,6 +12,7 @@ class Books extends Component
     constructor(props){
         super(props);
         this.state = {
+            authors: {},
             books: [],
             searchField: "",
             // lastQuery: ''
@@ -40,10 +41,21 @@ class Books extends Component
         this.setState({[event.target.name]: event.target.value});
     }
     componentDidMount(){
+
+        firebase.auth().onAuthStateChanged((user)=>{
+            if(user){
+                firebase.database().ref('users/'+user.uid).once('value').then(function(snapshot){
+                    this.setState({authors: snapshot.val().Authors});
+                    //this.state.authors = snapshot.val().Authors
+                }.bind(this));
+            }
+        });
+
+        var id;
         if(this.props.location.state.query === undefined)
-            var id = this.state.query;
+            id = this.state.query;
         else
-            var id = this.props.location.state.query;
+            id = this.props.location.state.query;
         console.log(id);
         request
             .get("https://www.googleapis.com/books/v1/volumes")
@@ -100,7 +112,7 @@ class Books extends Component
           <br/>
           {/* passes in handleSearch and searchBook method */}
           {/* passes data in state to BookList Component */}
-          <BookList books={this.state.books} props={this}/>
+          <BookList books={this.state.books} authors={this.state.authors} props={this}/>
       </div>
     );
 
