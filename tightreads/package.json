@@ -15,6 +15,7 @@
     "react-bootstrap-multiselect": "^2.4.1",
     "react-contenteditable": "^3.3.2",
     "react-dom": "^16.10.2",
+    "react-firebase-file-uploader": "^2.4.3",
     "react-icons": "^3.8.0",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.1.2",

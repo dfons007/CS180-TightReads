@@ -8,7 +8,18 @@ import "mdbreact/dist/css/mdb.css";
 import firebase from "../firebase";
 import {LinkContainer} from "react-router-bootstrap";
 import ContentEditable  from "react-contenteditable";
+import FileUploader from "react-firebase-file-uploader";
+import Select from "react-select";
 
+const GENRES = ['Fiction', 'Non-Fiction', 'Poetry', 'Horror', 'Science-Fiction', 'Adventure', 'Romance', 'Drama'];
+
+let options = [];
+
+options = options.concat(GENRES.map(x => x));
+
+function MakeOption(x) {
+    return {value: x, label: x};
+}
 
 class ProfilePage extends Component {
   constructor(){
@@ -21,22 +32,51 @@ class ProfilePage extends Component {
       editmode: true,
       authflag: true,
       query:'',
+      avatar: "",
+      isUploading: false,
+      progress: 0,
+      avatarURL: "",
+      selectstatus: "none",
+      genrestring: "",
     };
     this.genres = '';
+    this.tempgenre = [];
 
     this.onClick = this.onClick.bind(this);
     this.handleChangeDisplay = this.handleChangeDisplay.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
-    this.handleChangeGenre = this.handleChangeGenre.bind(this);
     this.Search = this.Search.bind(this);
+    this.handleUploadStart = this.handleUploadStart.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
+    this.handleUploadError = this.handleUploadError.bind(this);
+    this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+  handleInputChange = (value, e) => {
+      console.log(e);
+      this.tempgenre = value;
+      this.setState({favGenres: this.tempgenre});
+      console.log(this.state.favGenres);
+      console.log(this.tempgenre);
+  };
+  handleUploadStart = () => this.setState({isUploading:true, progress: 0});
+  handleProgress = progress => this.setState({progress});
+  handleUploadError = error => {
+    this.setState({isUploading:false});
+    console.error(error);
+  };
+  handleUploadSuccess = filename => {
+    firebase
+        .storage()
+        .ref("images")
+        .child(this.state.uid)
+        .getDownloadURL()
+        .then(url => this.setState({avatarURL: url}));
+  };
   handleChangeDisplay(event){
     var html = event.currentTarget.textContent;
     this.setState({ display: html });
-  }
-  handleChangeGenre(event){
-    var html = event.currentTarget.textContent;
-    this.setState({genres: html});
   }
   handleChangeBio(event){
     var html = event.currentTarget.textContent;
@@ -45,17 +85,27 @@ class ProfilePage extends Component {
 
   onClick(event){
     if(this.state.editmode === true){
-      this.setState({editmode:false});
+      this.setState({editmode:false, selectstatus: ""});
       console.log("Editting");
       // do editting
     }else{
-      this.setState({editmode:true});
+      this.setState({editmode:true, selectstatus: "none"});
       console.log(this.state.display);
       console.log(this.state.bio);
       firebase.database().ref('users/'+this.state.uid).update({
         displayname:this.state.display,
         bio:this.state.bio,
       });
+      firebase.database().ref('users/'+this.state.uid).child('Genres').set(
+          this.tempgenre
+      );
+
+      this.genres = this.tempgenre[0].value;
+      for(let i = 1; i < this.tempgenre.length; i++){
+          this.genres += ", "+this.tempgenre[i].value;
+      }
+      console.log(this.tempgenre);
+      this.setState({genrestring:this.genres});
       // save changes and submit to the database
     }
   }
@@ -68,9 +118,16 @@ class ProfilePage extends Component {
 componentDidMount() {
   firebase.auth().onAuthStateChanged((user)=>{
     if(user){
+      var that = this;
+      firebase.storage().ref("images").child(user.uid + ".jpg").getDownloadURL()
+          .then(function(url){
+              that.setState({avatarURL: url});
+          }).catch(function(error){
+              that.setState({avatarURL: "https://s.abcnews.com/images/Lifestyle/puppy-ht-3-er-170907_4x3_992.jpg"});
+              console.log(error);
+          });
       console.log(user.uid);
       if(this.state.authflag){
-        var that = this;
         var genrestring = '';
         firebase.database().ref('users/'+user.uid).once('value')
             .then(function(snapshot){
@@ -79,11 +136,13 @@ componentDidMount() {
                 email: snapshot.val().email,
                 bio: snapshot.val().bio,
               });
-              for(let i = 0; i < snapshot.val().Genres.length; i++){
-                genrestring = genrestring + " " + snapshot.val().Genres[i].value;
+              // Grabbing Genre's
+                genrestring = snapshot.val().Genres[0].value;
+              for(let i = 1; i < snapshot.val().Genres.length; i++){
+                genrestring += ", "+snapshot.val().Genres[i].value;
               }
-              that.setState({genres: genrestring});
-              console.log(that.state.genres);
+              that.setState({genrestring: genrestring});
+              console.log(that.state.genrestring);
 
             });
         this.setState({uid: user.uid});
@@ -126,6 +185,20 @@ componentDidMount() {
             <Button type="submit" variant="outline-light">Search</Button>
           </Form>
           <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
+          <label style={{backgroundColor: "#343A40" , color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
+            Upload Profile Image
+            <FileUploader
+                hidden
+              accept="image/*"
+              name="avatar"
+              filename={file=> this.state.uid + ".jpg"}
+              storageRef={firebase.storage().ref("images")}
+              onUploadStart={this.handleUploadStart}
+              onUploadError={this.handleUploadError}
+              onUploadSuccess={this.handleUploadSuccess}
+              onProgress={this.handlePRogress}
+            />
+          </label>
         </Navbar>
 
         <br/>
@@ -148,8 +221,9 @@ componentDidMount() {
                     <img
                         className="img-fluid"
                         // src="https://mdbootstrap.com/img/Photos/Slides/1.jpg"
-                        src = "https://s.abcnews.com/images/Lifestyle/puppy-ht-3-er-170907_4x3_992.jpg"
+                        src = {this.state.avatarURL}
                         alt="Profile Picture"
+                        style={{display:false}}
                     />
                     <a href="#!">
                       <MDBMask overlay="white-slight" className="waves-light" />
@@ -164,8 +238,22 @@ componentDidMount() {
                   <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
                     <a href="#!">Interested In</a>
                   </h3>
-                  <ContentEditable html={this.state.genres} onChange={this.handleChangeGenre} disabled={this.state.editmode}>
-                  </ContentEditable>
+                    <p>{this.state.genrestring}</p>
+                    <div style={{display: this.state.selectstatus}}>
+                        <p>Select new genres:</p>
+                    <Select
+                        isMulti
+                        type='selection'
+                        name="favGenres"
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        placeholder="Select Favorite Genre:"
+                        options={options.map(x => MakeOption(x))}
+                        closeMenuOnSelect={false}
+                        onChange={this.handleInputChange}
+                        inputValue={this.state.value}
+                    />
+                    </div>
                 </div>
               </MDBCol>
 
