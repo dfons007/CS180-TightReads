@@ -16,7 +16,7 @@ const BookList = props =>
                     var imageStyle = {}
                     var author = (book.volumeInfo.authors) ? book.volumeInfo.authors[0] : ''
                     
-                    if(book.volumeInfo.authors && props.authors[author.replace(/[.#$/[\]]/gi,'')])
+                    if(book.volumeInfo.authors && props.authors && props.authors[author.replace(/[.#$/[\]]/gi,'')])
                     {
                         if(props.authors[book.volumeInfo.authors[0].replace(/[.#$/[\]]/gi,'')] === "black")
                         {
