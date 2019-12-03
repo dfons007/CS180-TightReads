@@ -55,7 +55,7 @@ class HomePage extends Component {
                                           {that.data.items[i].volumeInfo.authors}
 
                                           {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
-
+                                    
                                       </Card.Text>
                                   </Card.Body>
                                   <Card.Footer>

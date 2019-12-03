@@ -5,6 +5,8 @@ import {Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 import { getGoogleBook} from '../google.js';
 import firebase from "../firebase";
+import Rating from '../Rating';
+
 
 class Book_UI extends Component {
 	constructor(props){
@@ -95,6 +97,9 @@ class Book_UI extends Component {
 							<p>
 								{this.state.summary} 
 							</p>
+
+							<Rating/>
+							
 							<Button variant="secondary" size="sm" onClick={()=>
                                 window.open(this.state.link)
                                 }>
@@ -106,7 +111,6 @@ class Book_UI extends Component {
 			</>
 		);
 	}
-    
     componentDidMount() {
 		firebase.auth().onAuthStateChanged((user)=>{
 			if(user){
