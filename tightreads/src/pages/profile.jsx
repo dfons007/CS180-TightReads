@@ -237,7 +237,7 @@ componentDidMount() {
                         // src="https://mdbootstrap.com/img/Photos/Slides/1.jpg"
                         src = {this.state.avatarURL}
                         alt="Profile Picture"
-                        style={{display:false}}
+                        style={{display:false,height:500, width:800}}
                     />
                     <a href="#!">
                       <MDBMask overlay="white-slight" className="waves-light" />
