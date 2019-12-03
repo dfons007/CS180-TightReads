@@ -86,7 +86,7 @@ class HomePage extends Component {
                                           {author}
 
                                           {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
-
+                                    
                                       </Card.Text>
                                   </Card.Body>
                                   <Card.Footer>
