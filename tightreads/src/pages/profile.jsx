@@ -10,9 +10,9 @@ import {LinkContainer} from "react-router-bootstrap";
 import ContentEditable  from "react-contenteditable";
 import FileUploader from "react-firebase-file-uploader";
 import Select from "react-select";
+import { getGoogleBook} from '../google.js';
 
 const GENRES = ['Fiction', 'Non-Fiction', 'Poetry', 'Horror', 'Science-Fiction', 'Adventure', 'Romance', 'Drama'];
-import { getGoogleBook} from '../google.js';
 
 
 
@@ -181,7 +181,7 @@ componentDidMount() {
               for(let i = 0; i < snapshot.val().Favorites.length; i++){
                 keysArray[i] = snapshot.val().Favorites[i]
               }
-              that.setState({keys: keysArray})
+              that.setState({keys: keysArray});
             //   Get book info based on key given from key array
               if(that.state.keys[0] != null){
                 getGoogleBook(that.state.keys[0]).then(data => {
@@ -194,10 +194,10 @@ componentDidMount() {
                   });
 
 
-                  console.log(that.state.author)
+                  console.log(that.state.author);
 
-                  that.setState({author: "By " + that.state.author})
-                  that.setState({bookgenre: "Genre: " + that.state.bookgenre})
+                  that.setState({author: "By " + that.state.author});
+                  that.setState({bookgenre: "Genre: " + that.state.bookgenre});
 
               });
               }
