@@ -56,6 +56,7 @@ class ProfilePage extends Component {
     this.onClick = this.onClick.bind(this);
     this.handleChangeDisplay = this.handleChangeDisplay.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
+    this.handleChangeGenre = this.handleChangeGenre.bind(this);
     this.Search = this.Search.bind(this);
     this.handleUploadStart = this.handleUploadStart.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
@@ -108,6 +109,12 @@ class ProfilePage extends Component {
     var html = event.currentTarget.textContent;
     this.setState({ display: html });
   }
+  handleChangeGenre(event){
+    var html = event.currentTarget.textContent;
+    this.setState({genres: html});
+  }
+
+
   handleChangeBio(event){
     var html = event.currentTarget.textContent;
     this.setState({ bio: html });
@@ -115,28 +122,17 @@ class ProfilePage extends Component {
 
   onClick(event){
     if(this.state.editmode === true){
-      this.setState({editmode:false, selectstatus: ""});
+      this.setState({editmode:false});
       console.log("Editting");
       // do editting
-    }else {
-      this.setState({editmode: true, selectstatus: "none"});
+    }else{
+      this.setState({editmode:true});
       console.log(this.state.display);
       console.log(this.state.bio);
-      firebase.database().ref('users/' + this.state.uid).update({
-        displayname: this.state.display,
-        bio: this.state.bio,
+      firebase.database().ref('users/'+this.state.uid).update({
+        displayname:this.state.display,
+        bio:this.state.bio,
       });
-      if (this.tempgenre.length !== 0) {
-        firebase.database().ref('users/' + this.state.uid).child('Genres').set(
-            this.tempgenre
-        );
-        this.genres = this.tempgenre[0].value;
-        for (let i = 1; i < this.tempgenre.length; i++) {
-          this.genres += ", " + this.tempgenre[i].value;
-        }
-        console.log(this.tempgenre);
-        this.setState({genrestring: this.genres});
-      }
       // save changes and submit to the database
     }
   }
@@ -149,16 +145,9 @@ class ProfilePage extends Component {
 componentDidMount() {
   firebase.auth().onAuthStateChanged((user)=>{
     if(user){
-      var that = this;
-      firebase.storage().ref("images").child(user.uid + ".jpg").getDownloadURL()
-          .then(function(url){
-              that.setState({avatarURL: url});
-          }).catch(function(error){
-              that.setState({avatarURL: "https://s.abcnews.com/images/Lifestyle/puppy-ht-3-er-170907_4x3_992.jpg"});
-              console.log(error);
-          });
       console.log(user.uid);
       if(this.state.authflag){
+        var that = this;
         var genrestring = '';
         var keysArray = [];
         firebase.database().ref('users/'+user.uid).once('value')
@@ -168,29 +157,18 @@ componentDidMount() {
                 email: snapshot.val().email,
                 bio: snapshot.val().bio,
               });
-              // Grabbing Genre's
-                genrestring = snapshot.val().Genres[0].value;
-              for(let i = 1; i < snapshot.val().Genres.length; i++){
-                genrestring += ", "+snapshot.val().Genres[i].value;
+              for(let i = 0; i < snapshot.val().Genres.length; i++){
+                genrestring = genrestring + " " + snapshot.val().Genres[i].value;
               }
-              that.setState({genrestring: genrestring});
-              console.log(that.state.genrestring);
               that.setState({genres: genrestring});
               console.log(that.state.genres);
               // Make array full of book keys from books in the database
-
-
-              if (snapshot.child('Favorites').exists()){
-                keysArray[0] = snapshot.val().Favorites[0]
+              for(let i = 0; i < snapshot.val().Favorites.length; i++){
+                keysArray[i] = snapshot.val().Favorites[i]
               }
-              that.setState({keys: keysArray});
-              // for(let i = 0; i < snapshot.val().Favorites.length; i++){
-              //   keysArray[i] = snapshot.val().Favorites[i]
-              // }
               that.setState({keys: keysArray})
-              console.log("hello",that.state.keys)
             //   Get book info based on key given from key array
-              if(snapshot.child('Favorites').exists()){
+              if(that.state.keys[0] != null){
                 getGoogleBook(that.state.keys[0]).then(data => {
                   that.setState({
                       title: (data.volumeInfo.title) ? data.volumeInfo.title : '',
@@ -201,10 +179,10 @@ componentDidMount() {
                   });
 
 
-                  console.log(that.state.author);
+                  console.log(that.state.author)
 
-                  that.setState({author: "By " + that.state.author});
-                  that.setState({bookgenre: "Genre: " + that.state.bookgenre});
+                  that.setState({author: "By " + that.state.author})
+                  that.setState({bookgenre: "Genre: " + that.state.bookgenre})
 
               });
               }
@@ -259,22 +237,6 @@ componentDidMount() {
             <Button type="submit" variant="outline-light">Search</Button>
           </Form>
           <Button variant="outline-light" onClick={this.onClick}>Edit</Button>
-          <Button type="submit" onClick={this.signout} variant="outline-light">Sign Out</Button>
-          <label style={{backgroundColor: "#343A40" , color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
-            Upload Profile Image
-            <FileUploader
-                hidden
-              accept="image/*"
-              name="avatar"
-              filename={file=> this.state.uid + ".jpg"}
-              storageRef={firebase.storage().ref("images")}
-              onUploadStart={this.handleUploadStart}
-              onUploadError={this.handleUploadError}
-              onUploadSuccess={this.handleUploadSuccess}
-              onProgress={this.handlePRogress}
-            />
-          </label>
-
         </Navbar>
 
         <br/>
@@ -292,10 +254,8 @@ componentDidMount() {
                   <MDBView hover rounded className="z-depth-1-half mb-4">
                     <img
                         className="img-fluid"
-                        // src="https://mdbootstrap.com/img/Photos/Slides/1.jpg"
-                        src = {this.state.avatarURL}
+                        src = "https://s.abcnews.com/images/Lifestyle/puppy-ht-3-er-170907_4x3_992.jpg"
                         alt="Profile Picture"
-                        style={{display:false,height:500, width:800}}
                     />
                     <a href="#!">
                       <MDBMask overlay="white-slight" className="waves-light" />
@@ -310,24 +270,13 @@ componentDidMount() {
                   <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
                     <a href="#!">Interested In</a>
                   </h3>
-                    <p>{this.state.genrestring}</p>
-                    <div style={{display: this.state.selectstatus}}>
-                        <p>Select new genres:</p>
-                    <Select
-                        isMulti
-                        type='selection'
-                        name="favGenres"
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        placeholder="Select Favorite Genre:"
-                        options={options.map(x => MakeOption(x))}
-                        closeMenuOnSelect={false}
-                        onChange={this.handleInputChange}
-                        inputValue={this.state.value}
-                    />
-                    </div>
+                  <ContentEditable html={this.state.genres} onChange={this.handleChangeGenre} disabled={this.state.editmode}>
+                  </ContentEditable>
                 </div>
               </MDBCol>
+
+
+
 
               <MDBCol md="12" lg="6">
                 <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
