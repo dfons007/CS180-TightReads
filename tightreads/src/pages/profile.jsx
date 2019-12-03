@@ -178,12 +178,19 @@ componentDidMount() {
               that.setState({genres: genrestring});
               console.log(that.state.genres);
               // Make array full of book keys from books in the database
-              for(let i = 0; i < snapshot.val().Favorites.length; i++){
-                keysArray[i] = snapshot.val().Favorites[i]
+
+
+              if (snapshot.child('Favorites').exists()){
+                keysArray[0] = snapshot.val().Favorites[0]
               }
               that.setState({keys: keysArray});
+              // for(let i = 0; i < snapshot.val().Favorites.length; i++){
+              //   keysArray[i] = snapshot.val().Favorites[i]
+              // }
+              that.setState({keys: keysArray})
+              console.log("hello",that.state.keys)
             //   Get book info based on key given from key array
-              if(that.state.keys[0] != null){
+              if(snapshot.child('Favorites').exists()){
                 getGoogleBook(that.state.keys[0]).then(data => {
                   that.setState({
                       title: (data.volumeInfo.title) ? data.volumeInfo.title : '',
