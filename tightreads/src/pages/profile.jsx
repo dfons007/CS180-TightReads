@@ -10,8 +10,11 @@ import {LinkContainer} from "react-router-bootstrap";
 import ContentEditable  from "react-contenteditable";
 import FileUploader from "react-firebase-file-uploader";
 import Select from "react-select";
+import { getGoogleBook} from '../google.js';
 
 const GENRES = ['Fiction', 'Non-Fiction', 'Poetry', 'Horror', 'Science-Fiction', 'Adventure', 'Romance', 'Drama'];
+
+
 
 let options = [];
 
@@ -38,9 +41,17 @@ class ProfilePage extends Component {
       avatarURL: "",
       selectstatus: "none",
       genrestring: "",
+      title:'',
+      author:'',
+      artwork: '',
+      bookgenre:'',
+      link:'',
+      isPresent: true,
     };
     this.genres = '';
     this.tempgenre = [];
+    this.keys = '';
+
 
     this.onClick = this.onClick.bind(this);
     this.handleChangeDisplay = this.handleChangeDisplay.bind(this);
@@ -52,6 +63,7 @@ class ProfilePage extends Component {
     this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.signout = this.signout.bind(this);
+    this.handleDeleteFavorte = this.handleDeleteFavorte.bind(this);
   }
 
   signout(event){
@@ -85,6 +97,13 @@ class ProfilePage extends Component {
         .getDownloadURL()
         .then(url => this.setState({avatarURL: url}));
   };
+
+
+  handleDeleteFavorte(){
+    firebase.database().ref('users/'+ this.state.uid).child('Favorites').child(0).remove()
+    // this.setState({isPresent: false});
+  }
+
   handleChangeDisplay(event){
     var html = event.currentTarget.textContent;
     this.setState({ display: html });
@@ -141,6 +160,7 @@ componentDidMount() {
       console.log(user.uid);
       if(this.state.authflag){
         var genrestring = '';
+        var keysArray = [];
         firebase.database().ref('users/'+user.uid).once('value')
             .then(function(snapshot){
               that.setState({
@@ -155,7 +175,32 @@ componentDidMount() {
               }
               that.setState({genrestring: genrestring});
               console.log(that.state.genrestring);
+              that.setState({genres: genrestring});
+              console.log(that.state.genres);
+              // Make array full of book keys from books in the database
+              for(let i = 0; i < snapshot.val().Favorites.length; i++){
+                keysArray[i] = snapshot.val().Favorites[i]
+              }
+              that.setState({keys: keysArray});
+            //   Get book info based on key given from key array
+              if(that.state.keys[0] != null){
+                getGoogleBook(that.state.keys[0]).then(data => {
+                  that.setState({
+                      title: (data.volumeInfo.title) ? data.volumeInfo.title : '',
+                      author: (data.volumeInfo.authors) ? data.volumeInfo.authors[0] : '',
+                      artwork: (data.volumeInfo.imageLinks) ? data.volumeInfo.imageLinks.thumbnail : '',
+                      bookgenre: (data.volumeInfo.categories) ? data.volumeInfo.categories[0]  : '',
+                      link: (data.volumeInfo.previewLink) ? data.volumeInfo.previewLink : '',
+                  });
 
+
+                  console.log(that.state.author);
+
+                  that.setState({author: "By " + that.state.author});
+                  that.setState({bookgenre: "Genre: " + that.state.bookgenre});
+
+              });
+              }
             });
         this.setState({uid: user.uid});
         console.log('user', this.state.uid);
@@ -169,6 +214,16 @@ componentDidMount() {
 }
 
   render() {
+    let button;
+
+    const isPresent = this.state.isPresent;
+    //Delete favorite book
+    if (isPresent){
+      button =
+      <Button variant='info' size='sm' onClick={this.handleDeleteFavorte}>
+        Remove from favorites
+      </Button>;
+    }
     // authentication, if not authenticated return to home
 
     // Can we make this cleaner?
@@ -217,10 +272,6 @@ componentDidMount() {
 
         <br/>
         <br/>
-
-
-
-
 
 
         <MDBCard
@@ -272,9 +323,8 @@ componentDidMount() {
               </MDBCol>
 
               <MDBCol md="12" lg="6">
-
                 <h3 className="font-weight-bold dark-grey-text mb-3 p-0">
-                  <a href="#!">Recent Reads</a>
+                  <a href="#!">Favorite Books </a>
                 </h3>
                 <div style={{
                   borderBottom: "1px solid #e0e0e0",
@@ -285,8 +335,7 @@ componentDidMount() {
                       <MDBView hover rounded className="z-depth-1-half mb-4">
                         <img
                             className="img-fluid"
-                            // src="https://mdbootstrap.com/img/Photos/Others/img%20(29).jpg"
-                            src = "https://images-na.ssl-images-amazon.com/images/I/41K99%2BcInvL._SX326_BO1,204,203,200_.jpg"
+                            src = {this.state.artwork}
                             alt=""
                         />
                         <a href="#!">
@@ -296,94 +345,24 @@ componentDidMount() {
                     </MDBCol>
                     <MDBCol md="9">
                       <p className="font-weight-bold dark-grey-text">
-                        26/02/2018
+                        {this.state.title}
                       </p>
                       <div className="d-flex justify-content-between">
                         <MDBCol size="11" className="text-truncate pl-0 mb-3">
                           <a href="#!" className="dark-grey-text">
-                            Twilight
+                            {this.state.author}
                           </a>
                         </MDBCol>
-                        <a href="#!">
+                        <a href={this.state.link}>
                           <MDBIcon icon="angle-double-right" />
                         </a>
                       </div>
+                      <a>
+                        {this.state.bookgenre}
+                      </a>
                     </MDBCol>
                   </MDBRow>
                 </div>
-
-                <div style={{
-                  borderBottom: "1px solid #e0e0e0",
-                  marginBottom: "1.5rem"
-                }}>
-                  <MDBRow>
-                    <MDBCol md="3">
-                      <MDBView hover rounded className="z-depth-1-half mb-4">
-                        <img
-                            className="img-fluid"
-                            // src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(45).jpg"
-                            src = "https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2014/11/18/1416314274597/f3cee720-072a-4f02-9e1c-61048e26daad-500x720.jpeg?width=300&quality=85&auto=format&fit=max&s=708349c04cc087a4ea2600064d901da3"
-                            alt=""
-                        />
-                        <a href="#!">
-                          <MDBMask overlay="white-slight" className="waves-light" />
-                        </a>
-                      </MDBView>
-                    </MDBCol>
-                    <MDBCol md="9">
-                      <p className="font-weight-bold dark-grey-text">
-                        25/02/2018
-                      </p>
-                      <div className="d-flex justify-content-between">
-                        <MDBCol size="11" className="text-truncate pl-0 mb-3">
-                          <a href="#!" className="dark-grey-text">
-                            50 Shades of Gray
-                          </a>
-                        </MDBCol>
-                        <a href="#!">
-                          <MDBIcon icon="angle-double-right" />
-                        </a>
-                      </div>
-                    </MDBCol>
-                  </MDBRow>
-                </div>
-
-                <div style={{
-                  borderBottom: "1px solid #e0e0e0",
-                  marginBottom: "1.5rem"
-                }}>
-                  <MDBRow>
-                    <MDBCol md="3">
-                      <MDBView hover rounded className="z-depth-1-half mb-4">
-                        <img
-                            className="img-fluid"
-                            // src="https://mdbootstrap.com/img/Photos/Others/images/87.jpg"
-                            src = "https://images-na.ssl-images-amazon.com/images/I/41qdft82M9L.jpg"
-                            alt=""
-                        />
-                        <a href="#!">
-                          <MDBMask overlay="white-slight" className="waves-light" />
-                        </a>
-                      </MDBView>
-                    </MDBCol>
-                    <MDBCol md="9">
-                      <p className="font-weight-bold dark-grey-text">
-                        24/03/2018
-                      </p>
-                      <div className="d-flex justify-content-between">
-                        <MDBCol size="11" className="text-truncate pl-0 mb-3">
-                          <a href="#!" className="dark-grey-text">
-                            sadboiis
-                          </a>
-                        </MDBCol>
-                        <a href="#!">
-                          <MDBIcon icon="angle-double-right" />
-                        </a>
-                      </div>
-                    </MDBCol>
-                  </MDBRow>
-                </div>
-
               </MDBCol>
             </MDBRow>
           </MDBCardBody>

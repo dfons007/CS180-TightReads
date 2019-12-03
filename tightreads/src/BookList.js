@@ -1,10 +1,14 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {CardDeck, Card, Button} from 'react-bootstrap';
 import {withRouter} from 'react-router-dom';
+import Rating from './Rating';
+import StarRatingComponent from 'react-star-rating-component';
+
 
 //renders google books API data on UI
 const BookList = props =>
-{   
+{
     console.log("props.authors")
     console.log(props.authors)
     return (
@@ -15,14 +19,14 @@ const BookList = props =>
                     var image = (book.volumeInfo.imageLinks) ? book.volumeInfo.imageLinks.thumbnail : "https://via.placeholder.com/500"
                     var imageStyle = {}
                     var author = (book.volumeInfo.authors) ? book.volumeInfo.authors[0] : ''
-                    
+
                     if(book.volumeInfo.authors && props.authors && props.authors[author.replace(/[.#$/[\]]/gi,'')])
                     {
                         if(props.authors[book.volumeInfo.authors[0].replace(/[.#$/[\]]/gi,'')] === "black")
                         {
                             imageStyle = {filter: "grayscale(100%) blur(5px)"}
                         }
-                        
+
                         else if(props.authors[author.replace(/[.#$/[\]]/gi,'')] === "white")
                         {
                             imageStyle = {
@@ -41,7 +45,19 @@ const BookList = props =>
 
                                 {/* <Button variant="outline-secondary" size="sm">Secondary</Button> */}
 
-                            </Card.Text>
+                                <div>
+        {/* <h2>Rating from state: {rating}</h2> */}
+        {/* <StarRatingComponent
+          name="rate1"
+          starCount={5}
+          value={rating}
+          onStarClick={this.onStarClick.bind(this)}
+        /> */}
+        <Rating/>
+      </div>
+
+
+                                </Card.Text>
                         </Card.Body>
                         <Card.Footer>
                             {/* <small className="text-muted">Genre</small> */}
