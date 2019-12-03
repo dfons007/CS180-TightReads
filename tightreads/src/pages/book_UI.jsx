@@ -25,11 +25,24 @@ class Book_UI extends Component {
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.Search = this.Search.bind(this);
+		this.submitFavoriteBook = this.submitFavoriteBook.bind(this);
 	}
 
+
+	submitFavoriteBook() {
+
+		firebase.database().ref('users/'+ this.state.uid).child('Favorites').update
+		({
+			0: this.state.id
+		})
+	}
+	  
 	handleChange(event) {    //Event change handler will set our state variables
 		this.setState({[event.target.name]: event.target.value});
 	}
+
+
+
 
 	Search(event){
 		event.preventDefault();
@@ -95,11 +108,24 @@ class Book_UI extends Component {
 							<p>
 								{this.state.summary} 
 							</p>
-							<Button variant="secondary" size="sm" onClick={()=>
+							<Button variant="info" size="sm" onClick={()=>
                                 window.open(this.state.link)
                                 }>
                                 See this book on Google Books
                             </Button>
+							
+							{/* Add current book's key to database with indexed key */}
+							<Button variant='info' size='sm' onClick={this.submitFavoriteBook}>
+								Favorite 
+							</Button>
+
+								 {/* Delete current book  */}
+							<Button variant='info' size='sm' onClick={()=>
+                                     firebase.database().ref('users/'+ this.state.uid).child('Favorites').child(0).remove()
+                                 }>
+								Remove from favorites 
+							</Button>
+
 						</div>
 					</div>
 				</div>
